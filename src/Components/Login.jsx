@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { auth } from "./FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
@@ -26,9 +26,9 @@ const Login = () => {
         >
             <Form.Item
                 name="email"
-                rules={[{ required: true, message: "Введите ваш адрес электронной почты!" }]}
+                rules={[{ required: true, message: "Пожалуйста, введите вашу электронную почту!" }]}
             >
-                <Input placeholder="Электронная почта" />
+                <Input prefix={<MailOutlined />} placeholder="Электронная почта" />
             </Form.Item>
             <Form.Item
                 name="password"

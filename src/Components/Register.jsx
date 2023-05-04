@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, MailOutlined  } from "@ant-design/icons";
 import { auth, database } from "./FirebaseConfig";
 import { ref, set } from "firebase/database";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
@@ -56,7 +56,7 @@ const Register = () => {
                 name="email"
                 rules={[{ required: true, message: "Введите ваш адрес электронной почты!" }]}
             >
-                <Input placeholder="Электронная почта" />
+                <Input prefix={<MailOutlined />} placeholder="Электронная почта" />
             </Form.Item>
             <Form.Item
                 name="password"

@@ -11,7 +11,7 @@
 
 .container {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   height: 100vh;
 }
@@ -23,6 +23,10 @@
 
 .chat {
   width: 500px;
+}
+
+#login,#register {
+  margin-top: 20px;
 }
 
 .input-form {
@@ -41,8 +45,16 @@ li {
   width: 100%;
 }
 
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 600px) {
   .input-form {
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 }
