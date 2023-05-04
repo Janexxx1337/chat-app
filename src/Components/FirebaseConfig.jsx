@@ -1,12 +1,19 @@
-const FirebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    databaseURL: "YOUR_DATABASE_URL",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID",
-    measurementId: "YOUR_MEASUREMENT_ID"
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getDatabase } from "firebase/database";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyAO0g3am9dUuFeiZIYKuEcoyHNpF859_5A",
+    authDomain: "chatapp-9305d.firebaseapp.com",
+    projectId: "chatapp-9305d",
+    storageBucket: "chatapp-9305d.appspot.com",
+    messagingSenderId: "504666273329",
+    appId: "1:504666273329:web:74ecdbb369e9adaedb0710",
+    measurementId: "G-BDM3DFRGJH"
 };
 
-export default FirebaseConfig
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const database = getDatabase(firebaseApp);
+
+export { auth, database };
