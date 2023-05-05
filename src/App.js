@@ -1,16 +1,17 @@
 import React, {useState, useEffect} from "react";
 import "./App.css";
 import {Input, Button, List} from "antd";
-import {SendOutlined} from "@ant-design/icons";
+import {SendOutlined, DeleteOutlined} from "@ant-design/icons";
 import {auth, database} from "./Components/FirebaseConfig";
 import {onAuthStateChanged, signOut} from "firebase/auth";
-import {ref, onValue, push} from "firebase/database";
+import { ref, onValue, push, remove, child } from "firebase/database";
 import {BrowserRouter as Router, Route, Routes, Link, useNavigate} from "react-router-dom";
 import PrivateChat from "./Components/PrivateChat";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
 import UserList from "./Components/UserList";
 import {AuthProvider, useAuth} from "./Components/useAuth";
+import DeleteModal from './Components/DeleteModal'
 
 
 const AuthButtons = () => {
@@ -47,6 +48,9 @@ function App() {
     const [isPrivateChat, setIsPrivateChat] = useState(false);
     const [isPublicChatVisible, setIsPublicChatVisible] = useState(true);
     const [usersData, setUsersData] = useState({});
+
+    const [selectedMessageId, setSelectedMessageId] = useState(null);
+
 
     const togglePublicChat = () => {
         setIsPublicChatVisible((prevVisibility) => !prevVisibility);
@@ -103,6 +107,15 @@ function App() {
         push(messagesRef, messageData);
     };
 
+    const handleDelete = (messageId) => {
+        const messagesRef = ref(database, "messages");
+        if (messageId) {
+            remove(child(messagesRef, messageId));
+        }
+    };
+
+
+
     const leavePrivateChat = () => {
         setIsPrivateChat(false);
         setSelectedUser(null);
@@ -128,11 +141,22 @@ function App() {
                 receiver: isPrivateChat ? selectedUser : null,
             };
 
-
             push(messagesRef, messageData);
             setMessage("");
+
+            setTimeout(() => {
+                const messagesRef = ref(database, "messages");
+                const messageData = {
+                    sender: user.uid,
+                    senderName: user.displayName,
+                    text: "",
+                    receiver: selectedUser,
+                };
+                push(messagesRef, messageData);
+            }, 2000);
         }
     };
+
 
 
     return (
@@ -157,12 +181,19 @@ function App() {
                                                     <List
                                                         dataSource={messages.filter((msg) => !msg.receiver)}
                                                         renderItem={(msg, index) => (
-                                                            <List.Item key={index}>
-                                                                {msg.sender === user.uid ? "Вы: " : `${usersData[msg.sender]?.displayName || "пользователь"}: `}
+                                                            <List.Item
+                                                                key={msg.id}
+                                                                actions={[
+                                                                    <DeleteOutlined key="delete" onClick={() => handleDelete({ messageId: msg.id })} />,
+                                                                ]}
+                                                            >
+
+                                                            {msg.sender === user.uid ? "Вы: " : `${usersData[msg.sender]?.displayName || "пользователь"}: `}
                                                                 {msg.text}
                                                             </List.Item>
                                                         )}
                                                     />
+
                                                 </div>
                                             )}
                                     />
@@ -183,6 +214,20 @@ function App() {
                                         Отправить
                                     </Button>
                                 </form>
+
+                                {selectedMessageId && (
+                                    <DeleteModal
+                                        message={messages.find((msg) => msg.id === selectedMessageId)}
+                                        visible={!!selectedMessageId}
+                                        onCancel={() => setSelectedMessageId(null)}
+                                        onConfirm={(message) => {
+                                            const messagesRef = ref(database, "messages");
+                                            remove(child(messagesRef, message.id));
+                                            setSelectedMessageId(null);
+                                        }}
+                                    />
+                                )}
+
                             </>
                         ) : (
                             <>

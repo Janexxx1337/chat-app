@@ -10,9 +10,11 @@
     "antd": "^5.4.6",
     "antd-css-utilities": "^1.0.3",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "firebase": "^9.21.0",
     "howler": "^2.2.3",
+    "os-browserify": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.11.0",
@@ -21,6 +23,11 @@
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1",
     "web-vitals": "^2.1.4"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   },
   "scripts": {
     "start": "react-scripts start",
@@ -45,5 +52,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "dotenv-webpack": "^8.0.1"
   }
 }
