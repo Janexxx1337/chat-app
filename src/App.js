@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import "./App.css";
-import { Input, Button, List } from "antd";
-import { SendOutlined } from "@ant-design/icons";
-import { auth, database } from "./Components/FirebaseConfig";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { ref, onValue, push } from "firebase/database";
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react-router-dom";
+import {Input, Button, List} from "antd";
+import {SendOutlined} from "@ant-design/icons";
+import {auth, database} from "./Components/FirebaseConfig";
+import {onAuthStateChanged, signOut} from "firebase/auth";
+import {ref, onValue, push} from "firebase/database";
+import {BrowserRouter as Router, Route, Routes, Link, useNavigate} from "react-router-dom";
 import PrivateChat from "./Components/PrivateChat";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
@@ -26,7 +26,7 @@ const AuthButtons = () => {
             <Button
                 type="primary"
                 onClick={() => handleNavigation("/register")}
-                style={{ marginRight: "1rem" }}
+                style={{marginRight: "1rem"}}
             >
                 Регистрация
             </Button>
@@ -110,12 +110,12 @@ function App() {
         const messageData = {
             sender: user.uid,
             senderName: user.displayName,
-            text: `пользователь ${user.displayName} вышел из личного диалога.`,
+            text: `пользователь ${user.displayName} вы
+шел из личного диалога.`,
             receiver: selectedUser,
         };
         push(messagesRef, messageData);
     };
-
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -128,7 +128,7 @@ function App() {
                 receiver: isPrivateChat ? selectedUser : null,
             };
 
-            push(messagesRef, message);
+
             push(messagesRef, messageData);
             setMessage("");
         }
@@ -137,67 +137,69 @@ function App() {
 
     return (
         <AuthProvider>
-        <Router>
-            <div className="container">
-                <div className="chat">
-                    {user ? (
-                        <>
-                            <div>
-                                <Link to="/">Общий чат</Link> | <Link to="/private">Личный диалог</Link>
-                            </div>
-                            <Button type="link" onClick={handleSignOut}>
-                                Выйти
-                            </Button>
-                            <Routes>
-                                <Route
-                                    path="/"
-                                    element={
-                                        isPublicChatVisible && (
-                                            <div className="messages-container">
-                                                <List
-                                                    dataSource={messages.filter((msg) => !msg.receiver)}
-                                                    renderItem={(msg, index) => (
-                                                        <List.Item key={index}>
-                                                            {msg.sender === user.uid ? "Вы: " : `${usersData[msg.sender]?.displayName || "unknown"}: `}
-                                                            {msg.text}
-                                                        </List.Item>
-                                                    )}
-                                                />
-                                            </div>
-                                        )}
-                                />
-                                <Route
-                                    path="/private"
-                                    element={<PrivateChat messages={messages} user={user} selectedUser={selectedUser} />}
-                                />
-                            </Routes>
-                            <form onSubmit={onSubmit} className="input-form">
-                                <Input
-                                    placeholder="Введите сообщение"
-                                    value={message}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    style={{ width: "100%", marginRight: "1rem" }}
-                                />
-                                <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-                                    Отправить
+            <Router>
+                <div className="container">
+                    <div className="chat">
+                        {user ? (
+                            <>
+                                <div>
+                                    <Link to="/">Общий чат</Link> | <Link to="/private">Личный диалог</Link>
+                                </div>
+                                <Button type="link" onClick={handleSignOut}>
+                                    Выйти
                                 </Button>
-                            </form>
-                        </>
-                    ) : (
-                        <>
-                            <AuthButtons />
-                            <Routes>
-                                <Route path="/register" element={<Register />} />
-                                <Route path="/login" element={<Login />} />
-                            </Routes>
-                        </>
-                    )}
+                                <Routes>
+                                    <Route
+                                        path="/"
+                                        element={
+                                            isPublicChatVisible && (
+                                                <div className="messages-container">
+                                                    <List
+                                                        dataSource={messages.filter((msg) => !msg.receiver)}
+                                                        renderItem={(msg, index) => (
+                                                            <List.Item key={index}>
+                                                                {msg.sender === user.uid ? "Вы: " : `${usersData[msg.sender]?.displayName || "пользователь"}: `}
+                                                                {msg.text}
+                                                            </List.Item>
+                                                        )}
+                                                    />
+                                                </div>
+                                            )}
+                                    />
+                                    <Route
+                                        path="/private"
+                                        element={<PrivateChat messages={messages} user={user}
+                                                              selectedUser={selectedUser}/>}
+                                    />
+                                </Routes>
+                                <form onSubmit={onSubmit} className="input-form">
+                                    <Input
+                                        placeholder="Введите сообщение"
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
+                                        style={{width: "100%", marginRight: "1rem"}}
+                                    />
+                                    <Button type="primary" htmlType="submit" icon={<SendOutlined/>}>
+                                        Отправить
+                                    </Button>
+                                </form>
+                            </>
+                        ) : (
+                            <>
+                                <AuthButtons/>
+                                <Routes>
+                                    <Route path="/register" element={<Register/>}/>
+                                    <Route path="/login" element={<Login/>}/>
+                                </Routes>
+                            </>
+                        )}
+                    </div>
+                    <UserList setSelectedUser={setSelectedUser} enterPrivateChat={enterPrivateChat}/>
                 </div>
-                <UserList setSelectedUser={setSelectedUser} enterPrivateChat={enterPrivateChat} />
-            </div>
-        </Router>
-            </AuthProvider>
+            </Router>
+        </AuthProvider>
     );
 }
 
 export default App;
+
