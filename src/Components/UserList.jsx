@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { List } from 'antd';
+import { List, Badge } from 'antd';
+import { NotificationOutlined } from '@ant-design/icons';
 import { ref, onValue } from 'firebase/database';
 import { database } from './FirebaseConfig';
 
-
 const UserList = ({ setSelectedUser, enterPrivateChat, user }) => {
     const [users, setUsers] = useState([]);
-    const [userMessageStatus, setUserMessageStatus] = useState({});
-
+    const [usersWithNotifications, setUsersWithNotifications] = useState([]);
 
     useEffect(() => {
         const messagesRef = ref(database, 'messages');
@@ -21,11 +20,10 @@ const UserList = ({ setSelectedUser, enterPrivateChat, user }) => {
                         messageStatus[msg.receiver] = true;
                     }
                 });
-                setUserMessageStatus(messageStatus);
+                setUsersWithNotifications(Object.keys(messageStatus));
             }
         });
     }, [user.uid]);
-
 
     useEffect(() => {
         const usersRef = ref(database, 'users');
@@ -39,6 +37,11 @@ const UserList = ({ setSelectedUser, enterPrivateChat, user }) => {
 
     const filteredUsers = users.filter((u) => u.uid !== user?.uid); // Отфильтруйте текущего пользователя
 
+    const handleUserClick = (userId) => {
+        setSelectedUser(userId);
+        enterPrivateChat();
+    };
+
     return (
         <div>
             <h3>Список пользователей:</h3>
@@ -47,12 +50,15 @@ const UserList = ({ setSelectedUser, enterPrivateChat, user }) => {
                 renderItem={(user) => (
                     <List.Item
                         key={user.uid}
-                        onClick={() => {
-                            setSelectedUser(user.uid);
-                            enterPrivateChat();
-                        }}
+                        onClick={() => handleUserClick(user.uid)}
+                        style={{ cursor: 'pointer' }}
                     >
-                        {user.displayName}
+                        <Badge dot={usersWithNotifications.includes(user.uid)}>
+                            {user.displayName}
+                            {usersWithNotifications.includes(user.uid) && (
+                                <NotificationOutlined style={{ marginLeft: 8 }} />
+                            )}
+                        </Badge>
                     </List.Item>
                 )}
             />

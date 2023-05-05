@@ -51,6 +51,7 @@ function App() {
     const [selectedMessageId, setSelectedMessageId] = useState(null);
 
     const [lastNotificationMessageRef, setLastNotificationMessageRef] = useState(null);
+    const [notifications, setNotifications] = useState({});
 
     const togglePublicChat = () => {
         setIsPublicChatVisible((prevVisibility) => !prevVisibility);
@@ -82,9 +83,22 @@ function App() {
             const data = snapshot.val();
             if (data) {
                 setMessages(Object.values(data));
+
+                // добавление оповещений для новых сообщений, отправленных вам
+                if (user && isPrivateChat) {
+                    const newNotifications = {};
+
+                    Object.entries(data).forEach(([messageId, message]) => {
+                        if (message.receiver === user.uid && !message.isRead) {
+                            newNotifications[messageId] = message;
+                        }
+                    });
+
+                    setNotifications(newNotifications);
+                }
             }
         });
-    }, []);
+    }, [user, isPrivateChat]);
 
     const handleDelete = ({ messageId }) => {
         if (user && messageId.sender === user.uid) {
@@ -195,7 +209,14 @@ function App() {
                                     />
                                     <Route
                                         path="/private"
-                                        element={<PrivateChat messages={messages} user={user} selectedUser={selectedUser} />}
+                                        element={
+                                            <PrivateChat
+                                                messages={messages}
+                                                user={user}
+                                                selectedUser={selectedUser}
+                                                notifications={notifications}
+                                            />
+                                        }
                                     />
                                 </Routes>
                                 <form onSubmit={onSubmit} className="input-form">
