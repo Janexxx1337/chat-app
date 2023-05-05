@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { List } from "antd";
-import { auth, database } from "./FirebaseConfig";
+import { database } from "./FirebaseConfig";
 import { ref, onValue } from "firebase/database";
+import { useAuth } from "./useAuth";
 
-const UserList = () => {
+const UserList = ({ setSelectedUser, enterPrivateChat }) => {
+    const { user } = useAuth();
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
@@ -16,13 +18,18 @@ const UserList = () => {
         });
     }, []);
 
+    const handleUserClick = (userId) => {
+        setSelectedUser(userId);
+        enterPrivateChat();
+    };
+
     return (
-        <div className="user-list">
-            <h2>Пользователи:</h2>
+        <div>
+            <h2>Список пользователей</h2>
             <List
                 dataSource={users}
                 renderItem={(user) => (
-                    <List.Item key={user.uid}>
+                    <List.Item key={user.uid} onClick={() => handleUserClick(user.uid)}>
                         {user.displayName}
                     </List.Item>
                 )}

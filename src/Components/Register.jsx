@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Form, Input, Button, message } from "antd";
-import { UserOutlined, LockOutlined, MailOutlined  } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { auth, database } from "./FirebaseConfig";
 import { ref, set } from "firebase/database";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
 const Register = () => {
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const onFinish = async (values) => {
-        setLoading(true);
         try {
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
@@ -20,10 +18,8 @@ const Register = () => {
             );
             const user = userCredential.user;
 
-            // Здесь мы обновляем информацию о пользователе с именем, которое указал пользователь при регистрации
             await updateProfile(user, { displayName: values.username });
 
-            // Запись пользователя в базу данных
             const userRef = ref(database, `users/${user.uid}`);
             set(userRef, {
                 uid: user.uid,
@@ -37,15 +33,10 @@ const Register = () => {
             console.error("Ошибка регистрации:", error);
             message.error("Ошибка регистрации, пожалуйста, попробуйте еще раз.");
         }
-        setLoading(false);
     };
 
     return (
-        <Form
-            name="register"
-            onFinish={onFinish}
-            autoComplete="off"
-        >
+        <Form name="register" onFinish={onFinish} autoComplete="off">
             <Form.Item
                 name="username"
                 rules={[{ required: true, message: "Введите ваше имя пользователя!" }]}
@@ -65,7 +56,7 @@ const Register = () => {
                 <Input.Password prefix={<LockOutlined />} placeholder="Пароль" />
             </Form.Item>
             <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading}>
+                <Button type="primary" htmlType="submit">
                     Зарегистрироваться
                 </Button>
             </Form.Item>
