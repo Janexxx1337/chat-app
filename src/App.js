@@ -1,18 +1,18 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import {Input, Button, List} from "antd";
-import {SendOutlined, DeleteOutlined} from "@ant-design/icons";
-import {auth, database} from "./Components/FirebaseConfig";
-import {onAuthStateChanged, signOut} from "firebase/auth";
+import { Input, Button, List } from "antd";
+import { SendOutlined, DeleteOutlined } from "@ant-design/icons";
+import { auth, database } from "./Components/FirebaseConfig";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { ref, onValue, push, remove, child } from "firebase/database";
-import {BrowserRouter as Router, Route, Routes, Link, useNavigate} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react-router-dom";
 import PrivateChat from "./Components/PrivateChat";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
 import UserList from "./Components/UserList";
-import {AuthProvider, useAuth} from "./Components/useAuth";
-import DeleteModal from './Components/DeleteModal'
-
+import { AuthProvider } from "./Components/useAuth";
+import DeleteModal from "./Components/DeleteModal";
+import { isEmpty } from "lodash";
 
 const AuthButtons = () => {
     const navigate = useNavigate();
@@ -21,17 +21,16 @@ const AuthButtons = () => {
         navigate(path);
     };
 
-
     return (
-        <div className={'buttons'}>
+        <div className={"buttons"}>
             <Button
                 type="primary"
                 onClick={() => handleNavigation("/register")}
-                style={{marginRight: "1rem"}}
+                style={{ marginRight: "1rem" }}
             >
                 Регистрация
             </Button>
-            <Button className={'exit'} type="primary" onClick={() => handleNavigation("/login")}>
+            <Button className={"exit"} type="primary" onClick={() => handleNavigation("/login")}>
                 Вход
             </Button>
         </div>
@@ -47,15 +46,15 @@ function App() {
 
     const [isPrivateChat, setIsPrivateChat] = useState(false);
     const [isPublicChatVisible, setIsPublicChatVisible] = useState(true);
-    const [usersData, setUsersData] = useState({});
 
+    const [usersData, setUsersData] = useState({});
     const [selectedMessageId, setSelectedMessageId] = useState(null);
 
+    const [lastNotificationMessageRef, setLastNotificationMessageRef] = useState(null);
 
     const togglePublicChat = () => {
         setIsPublicChatVisible((prevVisibility) => !prevVisibility);
     };
-
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -87,6 +86,12 @@ function App() {
         });
     }, []);
 
+    const handleDelete = ({ messageId }) => {
+        if (user && messageId.sender === user.uid) {
+            setSelectedMessageId(messageId);
+        }
+    };
+
     const handleSignOut = async () => {
         try {
             await signOut(auth);
@@ -96,6 +101,8 @@ function App() {
     };
 
     const enterPrivateChat = () => {
+        if (lastNotificationMessageRef === selectedUser) return;
+
         setIsPrivateChat(true);
         const messagesRef = ref(database, "messages");
         const messageData = {
@@ -104,17 +111,14 @@ function App() {
             text: `пользователь ${user.displayName} вошел в личный диалог с вами.`,
             receiver: selectedUser,
         };
-        push(messagesRef, messageData);
+        const newMessageRef = push(messagesRef, messageData);
+        setLastNotificationMessageRef(selectedUser);
+
+        setTimeout(() => {
+            remove(newMessageRef);
+            setLastNotificationMessageRef(null);
+        }, 2000);
     };
-
-    const handleDelete = (messageId) => {
-        const messagesRef = ref(database, "messages");
-        if (messageId) {
-            remove(child(messagesRef, messageId));
-        }
-    };
-
-
 
     const leavePrivateChat = () => {
         setIsPrivateChat(false);
@@ -123,12 +127,12 @@ function App() {
         const messageData = {
             sender: user.uid,
             senderName: user.displayName,
-            text: `пользователь ${user.displayName} вы
-шел из личного диалога.`,
+            text: `пользователь ${user.displayName} вышел из личного диалога.`,
             receiver: selectedUser,
         };
         push(messagesRef, messageData);
     };
+
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -143,21 +147,8 @@ function App() {
 
             push(messagesRef, messageData);
             setMessage("");
-
-            setTimeout(() => {
-                const messagesRef = ref(database, "messages");
-                const messageData = {
-                    sender: user.uid,
-                    senderName: user.displayName,
-                    text: "",
-                    receiver: selectedUser,
-                };
-                push(messagesRef, messageData);
-            }, 2000);
         }
     };
-
-
 
     return (
         <AuthProvider>
@@ -172,6 +163,8 @@ function App() {
                                 <Button type="link" onClick={handleSignOut}>
                                     Выйти
                                 </Button>
+                                {user && <div className="current-user">Здравствуйте, {user.displayName}</div>}
+
                                 <Routes>
                                     <Route
                                         path="/"
@@ -184,23 +177,25 @@ function App() {
                                                             <List.Item
                                                                 key={msg.id}
                                                                 actions={[
-                                                                    <DeleteOutlined key="delete" onClick={() => handleDelete({ messageId: msg.id })} />,
-                                                                ]}
+                                                                    user && msg.sender === user.uid && (
+                                                                        <DeleteOutlined
+                                                                            key="delete"
+                                                                            onClick={() => handleDelete({ messageId: msg.id })}
+                                                                        />
+                                                                    ),
+                                                                ].filter((action) => !isEmpty(action))}
                                                             >
-
-                                                            {msg.sender === user.uid ? "Вы: " : `${usersData[msg.sender]?.displayName || "пользователь"}: `}
+                                                                {msg.sender === user.uid ? "Вы: " : `${usersData[msg.sender]?.displayName || "пользователь"}: `}
                                                                 {msg.text}
                                                             </List.Item>
                                                         )}
                                                     />
-
                                                 </div>
                                             )}
                                     />
                                     <Route
                                         path="/private"
-                                        element={<PrivateChat messages={messages} user={user}
-                                                              selectedUser={selectedUser}/>}
+                                        element={<PrivateChat messages={messages} user={user} selectedUser={selectedUser} />}
                                     />
                                 </Routes>
                                 <form onSubmit={onSubmit} className="input-form">
@@ -208,9 +203,9 @@ function App() {
                                         placeholder="Введите сообщение"
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
-                                        style={{width: "100%", marginRight: "1rem"}}
+                                        style={{ width: "100%", marginRight: "1rem" }}
                                     />
-                                    <Button type="primary" htmlType="submit" icon={<SendOutlined/>}>
+                                    <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
                                         Отправить
                                     </Button>
                                 </form>
@@ -223,6 +218,7 @@ function App() {
                                         onConfirm={(message) => {
                                             const messagesRef = ref(database, "messages");
                                             remove(child(messagesRef, message.id));
+
                                             setSelectedMessageId(null);
                                         }}
                                     />
@@ -231,15 +227,15 @@ function App() {
                             </>
                         ) : (
                             <>
-                                <AuthButtons/>
+                                <AuthButtons />
                                 <Routes>
-                                    <Route path="/register" element={<Register/>}/>
-                                    <Route path="/login" element={<Login/>}/>
+                                    <Route path="/register" element={<Register />} />
+                                    <Route path="/login" element={<Login />} />
                                 </Routes>
                             </>
                         )}
                     </div>
-                    <UserList setSelectedUser={setSelectedUser} enterPrivateChat={enterPrivateChat}/>
+                    {user && <UserList setSelectedUser={setSelectedUser} enterPrivateChat={enterPrivateChat} user={user} />}
                 </div>
             </Router>
         </AuthProvider>
@@ -247,4 +243,3 @@ function App() {
 }
 
 export default App;
-
