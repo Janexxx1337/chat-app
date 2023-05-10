@@ -53,9 +53,6 @@ function App() {
     const [lastNotificationMessageRef, setLastNotificationMessageRef] = useState(null);
     const [notifications, setNotifications] = useState({});
 
-    const togglePublicChat = () => {
-        setIsPublicChatVisible((prevVisibility) => !prevVisibility);
-    };
 
 
     useEffect(() => {
@@ -80,7 +77,6 @@ function App() {
 
 
 
-
     useEffect(() => {
         const messagesRef = ref(database, "messages");
         onValue(messagesRef, (snapshot) => {
@@ -88,8 +84,6 @@ function App() {
             if (data) {
                 setMessages(Object.entries(data).map(([id, value]) => ({ ...value, id })));
 
-
-                // добавление оповещений для новых сообщений, отправленных вам
                 if (user && isPrivateChat) {
                     const newNotifications = {};
 
@@ -135,18 +129,6 @@ function App() {
         }, 2000);
     };
 
-    const leavePrivateChat = () => {
-        setIsPrivateChat(false);
-        setSelectedUser(null);
-        const messagesRef = ref(database, "messages");
-        const messageData = {
-            sender: user.uid,
-            senderName: user.displayName,
-            text: `пользователь ${user.displayName} вышел из личного диалога.`,
-            receiver: selectedUser,
-        };
-        push(messagesRef, messageData);
-    };
 
     const onSubmit = (e) => {
         e.preventDefault();
