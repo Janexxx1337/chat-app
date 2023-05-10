@@ -26,7 +26,6 @@ const AuthButtons = () => {
             <Button
                 type="primary"
                 onClick={() => handleNavigation("/register")}
-                style={{ marginRight: "1rem" }}
             >
                 Регистрация
             </Button>
@@ -141,9 +140,7 @@ function App() {
                 text: message,
                 receiver: isPrivateChat ? selectedUser : null,
             };
-            const newMessageRef = push(messagesRef, messageData);
             push(messagesRef, messageData);
-            messageData.id = newMessageRef.key;
             setMessage("");
         }
     };
@@ -192,7 +189,7 @@ function App() {
                                         placeholder="Введите сообщение"
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
-                                        style={{ width: "100%", marginRight: "1rem" }}
+                                        style={{ width: "100%" }}
                                     />
                                     <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
                                         Отправить

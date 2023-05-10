@@ -67,6 +67,11 @@ li {
     gap: 5px;
 }
 
+button.ant-btn {
+    width: 200px;
+    margin: 0 15px;
+}
+
 .github-button:hover,
 .github-button:focus {
     background-color: #fff;
@@ -94,5 +99,14 @@ li {
         flex-direction: column;
         align-items: center;
         justify-content: center;
+    }
+
+    button.ant-btn {
+        width: 100%;
+        margin: 20px auto 0;
+    }
+
+    .current-user {
+        display: none;
     }
 }
