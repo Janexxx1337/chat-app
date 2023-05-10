@@ -5,12 +5,13 @@ const PrivateChat = ({ messages, user, selectedUser, notifications }) => {
     return (
         <>
             <div className="notifications">
-                {Object.values(notifications).map((notification, index) => (
+                {Object.values(notifications).filter(notification => !notification.isRead).map((notification, index) => (
                     <div key={index}>
                         {notification.senderName}: {notification.text}
                     </div>
                 ))}
             </div>
+
             <div className="messages-container">
                 {user && selectedUser && (
                     <List

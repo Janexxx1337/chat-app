@@ -4,7 +4,7 @@ import { Input, Button,  } from "antd";
 import { SendOutlined,  } from "@ant-design/icons";
 import { auth, database } from "./Components/FirebaseConfig";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { ref, onValue, push, remove, child } from "firebase/database";
+import { ref, onValue, push, remove, child, update } from "firebase/database";
 import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react-router-dom";
 import PrivateChat from "./Components/PrivateChat";
 import Register from "./Components/Register";
@@ -13,6 +13,7 @@ import UserList from "./Components/UserList";
 import { AuthProvider } from "./Components/useAuth";
 import DeleteModal from "./Components/DeleteModal";
 import MessageContainer from "./Components/MessageContainer";
+
 
 const AuthButtons = () => {
     const navigate = useNavigate();
@@ -81,7 +82,7 @@ function App() {
         onValue(messagesRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                setMessages(Object.entries(data).map(([id, value]) => ({ ...value, id })));
+                setMessages(Object.entries(data).map(([id, value]) => ({...value, id})));
 
                 if (user && isPrivateChat) {
                     const newNotifications = {};
@@ -89,6 +90,10 @@ function App() {
                     Object.entries(data).forEach(([messageId, message]) => {
                         if (message.receiver === user.uid && !message.isRead) {
                             newNotifications[messageId] = message;
+
+                            // Update the message to mark it as read
+                            const messageRef = child(messagesRef, messageId);
+                            update(messageRef, { isRead: true });
                         }
                     });
 
@@ -97,7 +102,6 @@ function App() {
             }
         });
     }, [user, isPrivateChat]);
-
 
 
     const handleSignOut = async () => {
@@ -139,11 +143,13 @@ function App() {
                 senderName: user.displayName,
                 text: message,
                 receiver: isPrivateChat ? selectedUser : null,
+                isRead: false,
             };
             push(messagesRef, messageData);
             setMessage("");
         }
     };
+
 
     return (
         <AuthProvider>
@@ -166,10 +172,10 @@ function App() {
                                         element={
                                             isPublicChatVisible && (
                                                 <MessageContainer
-                                                user={user}
-                                                setSelectedMessageId={setSelectedMessageId}
-                                                messages={messages}
-                                                usersData={usersData}/>
+                                                    user={user}
+                                                    setSelectedMessageId={setSelectedMessageId}
+                                                    messages={messages}
+                                                    usersData={usersData}/>
                                             )}
                                     />
                                     <Route

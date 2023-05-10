@@ -6,6 +6,7 @@ import React from "react";
 const MessageContainer = (prop) => {
 
     const handleDelete = (message) => {
+
         if (prop.user && message.sender === prop.user.uid) {
             prop.setSelectedMessageId(message.id);
         }
