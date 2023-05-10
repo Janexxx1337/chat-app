@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { Input, Button, List } from "antd";
-import { SendOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Input, Button,  } from "antd";
+import { SendOutlined,  } from "@ant-design/icons";
 import { auth, database } from "./Components/FirebaseConfig";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { ref, onValue, push, remove, child } from "firebase/database";
@@ -12,7 +12,7 @@ import Login from "./Components/Login";
 import UserList from "./Components/UserList";
 import { AuthProvider } from "./Components/useAuth";
 import DeleteModal from "./Components/DeleteModal";
-import { isEmpty } from "lodash";
+import MessageContainer from "./Components/MessageContainer";
 
 const AuthButtons = () => {
     const navigate = useNavigate();
@@ -40,8 +40,6 @@ const AuthButtons = () => {
 function App() {
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState([]);
-
-
 
     const [user, setUser] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -107,13 +105,7 @@ function App() {
         });
     }, [user, isPrivateChat]);
 
-    const handleDelete = (message) => {
-        console.log('delete')
 
-        if (user && message.sender === user.uid) {
-            setSelectedMessageId(message.id);
-        }
-    };
 
     const handleSignOut = async () => {
         try {
@@ -174,9 +166,6 @@ function App() {
         }
     };
 
-
-
-
     return (
         <AuthProvider>
             <Router>
@@ -197,28 +186,11 @@ function App() {
                                         path="/"
                                         element={
                                             isPublicChatVisible && (
-                                                <div className="messages-container">
-                                                    <List
-                                                        dataSource={messages.filter((msg) => !msg.receiver)}
-                                                        renderItem={(msg, index) => (
-                                                            <List.Item
-                                                                key={msg.id}
-                                                                actions={[
-                                                                    user && msg.sender === user.uid && (
-                                                                        <DeleteOutlined
-                                                                            key="delete"
-                                                                            onClick={() => handleDelete(msg)}
-                                                                        />
-
-                                                                    ),
-                                                                ].filter((action) => !isEmpty(action))}
-                                                            >
-                                                                {msg.sender === user.uid ? "Вы: " : `${usersData[msg.sender]?.displayName || "пользователь"}: `}
-                                                                {msg.text}
-                                                            </List.Item>
-                                                        )}
-                                                    />
-                                                </div>
+                                                <MessageContainer
+                                                user={user}
+                                                setSelectedMessageId={setSelectedMessageId}
+                                                messages={messages}
+                                                usersData={usersData}/>
                                             )}
                                     />
                                     <Route
