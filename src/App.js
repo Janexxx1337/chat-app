@@ -201,17 +201,13 @@ function App() {
                                         message={messages.find((msg) => msg.id === selectedMessageId)}
                                         visible={!!selectedMessageId}
                                         onCancel={() => setSelectedMessageId(null)}
-                                        onConfirm={(message) => {
-                                            if (message.id) {
-                                                const messagesRef = ref(database, "messages");
-                                                remove(child(messagesRef, message.id));
-                                                setSelectedMessageId(null);
-                                            } else {
-                                                console.error("Не удалось удалить сообщение: ID сообщения не определен");
-                                            }
+                                        onConfirm={(messageId) => {
+                                            const messagesRef = ref(database, "messages");
+                                            remove(child(messagesRef, messageId));
+                                            setSelectedMessageId(null);
                                         }}
-
                                     />
+
                                 )}
 
 

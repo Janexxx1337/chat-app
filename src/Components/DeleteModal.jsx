@@ -27,10 +27,11 @@ const DeleteModal = ({ message, onCancel, onConfirm }) => {
                     <Button
                         key="delete"
                         type="primary"
-                        onClick={handleConfirm}
+                        onClick={() => onConfirm(message.id)}
                     >
                         Удалить
                     </Button>
+
                 ]}
             >
                 <p>Вы уверены, что хотите удалить это сообщение?</p>
