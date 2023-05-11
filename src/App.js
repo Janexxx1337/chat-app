@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { Input, Button,  } from "antd";
-import { SendOutlined,  } from "@ant-design/icons";
+import { Input, Button, Dropdown, Menu } from "antd";
+import { SendOutlined, SmileOutlined } from "@ant-design/icons";
 import { auth, database } from "./Components/FirebaseConfig";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { ref, onValue, push, remove, child, update } from "firebase/database";
@@ -14,7 +14,6 @@ import { AuthProvider } from "./Components/useAuth";
 import DeleteModal from "./Components/DeleteModal";
 import MessageContainer from "./Components/MessageContainer";
 import Picker from 'emoji-picker-react';
-
 
 const AuthButtons = () => {
     const navigate = useNavigate();
@@ -134,7 +133,6 @@ function App() {
         }, 2000);
     };
 
-
     const onSubmit = (e) => {
         e.preventDefault();
 
@@ -157,6 +155,13 @@ function App() {
         setMessage((prevMessage) => prevMessage + emoji);
     };
 
+    const emojiPicker = (
+        <Picker
+            onEmojiClick={onEmojiClick}
+            disableAutoFocus={true}
+            style={{ position: "absolute", bottom: "40px", right: "10px" }}
+        />
+    );
 
     return (
         <AuthProvider>
@@ -182,8 +187,10 @@ function App() {
                                                     user={user}
                                                     setSelectedMessageId={setSelectedMessageId}
                                                     messages={messages}
-                                                    usersData={usersData}/>
-                                            )}
+                                                    usersData={usersData}
+                                                />
+                                            )
+                                        }
                                     />
                                     <Route
                                         path="/private"
@@ -203,10 +210,12 @@ function App() {
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
                                         style={{ width: "100%" }}
+                                        suffix={
+                                            <Dropdown overlay={emojiPicker} trigger={["click"]} placement="topRight">
+                                                <Button icon={<SmileOutlined />} />
+                                            </Dropdown>
+                                        }
                                     />
-                                    <div>
-                                        <Picker onEmojiClick={onEmojiClick} />
-                                    </div>
                                     <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
                                         Отправить
                                     </Button>
@@ -223,10 +232,7 @@ function App() {
                                             setSelectedMessageId(null);
                                         }}
                                     />
-
                                 )}
-
-
                             </>
                         ) : (
                             <>
@@ -238,17 +244,19 @@ function App() {
                             </>
                         )}
                     </div>
-                    {user && <UserList
-                        setSelectedUser={setSelectedUser}
-                        enterPrivateChat={enterPrivateChat}
-                        user={user}
-                        setPrivateChatUser={setPrivateChatUser}
-                    />
-                    }
+                    {user && (
+                        <UserList
+                            setSelectedUser={setSelectedUser}
+                            enterPrivateChat={enterPrivateChat}
+                            user={user}
+                            setPrivateChatUser={setPrivateChatUser}
+                        />
+                    )}
                 </div>
             </Router>
         </AuthProvider>
     );
+
 }
 
 export default App;
