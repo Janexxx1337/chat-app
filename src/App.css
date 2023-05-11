@@ -2,6 +2,15 @@ body {
     background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
 }
 
+.dark-theme {
+    background-color: #282c34;
+    color: white;
+}
+
+.dark-theme svg {
+    fill: black;
+}
+
 .App {
     display: flex;
     flex-direction: column;

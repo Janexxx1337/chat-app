@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import "./App.css";
-import {Input, Button } from "antd";
+import {Input, Button, Switch } from "antd";
 import {SendOutlined } from "@ant-design/icons";
 import {auth, database} from "./Components/FirebaseConfig";
 import {onAuthStateChanged, signOut} from "firebase/auth";
@@ -15,6 +15,7 @@ import DeleteModal from "./Components/DeleteModal";
 import MessageContainer from "./Components/MessageContainer";
 import EmojiPicker from "./Components/EmojiPicker";
 import AuthButtons from "./Components/AuthButtons";
+
 
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
 
     const [lastNotificationMessageRef, setLastNotificationMessageRef] = useState(null);
     const [notifications, setNotifications] = useState({});
+
+    const [isDarkTheme, setIsDarkTheme] = useState(false);
 
 
     useEffect(() => {
@@ -55,6 +58,14 @@ function App() {
         });
     }, []);
 
+
+    useEffect(() => {
+        if (isDarkTheme) {
+            document.body.classList.add("dark-theme");
+        } else {
+            document.body.classList.remove("dark-theme");
+        }
+    }, [isDarkTheme]);
 
     useEffect(() => {
         const messagesRef = ref(database, "messages");
@@ -135,7 +146,12 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-
+                <Switch
+                    checked={isDarkTheme}
+                    onChange={() => setIsDarkTheme(prev => !prev)}
+                    checkedChildren="Темная тема"
+                    unCheckedChildren="Светлая тема"
+                />
                 <div className="container">
                     <div className="chat">
                         {user ? (
