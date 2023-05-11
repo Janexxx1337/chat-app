@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import "./App.css";
-import { Input, Button, Dropdown, Menu } from "antd";
-import { SendOutlined, SmileOutlined } from "@ant-design/icons";
-import { auth, database } from "./Components/FirebaseConfig";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { ref, onValue, push, remove, child, update } from "firebase/database";
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react-router-dom";
+import {Input, Button, Dropdown} from "antd";
+import {SendOutlined, SmileOutlined} from "@ant-design/icons";
+import {auth, database} from "./Components/FirebaseConfig";
+import {onAuthStateChanged, signOut} from "firebase/auth";
+import {ref, onValue, push, remove, child, update} from "firebase/database";
+import {BrowserRouter as Router, Route, Routes, Link, useNavigate} from "react-router-dom";
 import PrivateChat from "./Components/PrivateChat";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
 import UserList from "./Components/UserList";
-import { AuthProvider } from "./Components/useAuth";
+import {AuthProvider} from "./Components/useAuth";
 import DeleteModal from "./Components/DeleteModal";
 import MessageContainer from "./Components/MessageContainer";
-import Picker from 'emoji-picker-react';
+import EmojiPicker from "./Components/EmojiPicker";
 
 const AuthButtons = () => {
     const navigate = useNavigate();
@@ -48,13 +48,11 @@ function App() {
     const [isPublicChatVisible, setIsPublicChatVisible] = useState(true);
     const [privateChatUser, setPrivateChatUser] = useState(null);
 
-    const [chosenEmoji, setChosenEmoji] = useState(null);
     const [usersData, setUsersData] = useState({});
     const [selectedMessageId, setSelectedMessageId] = useState(null);
 
     const [lastNotificationMessageRef, setLastNotificationMessageRef] = useState(null);
     const [notifications, setNotifications] = useState({});
-
 
 
     useEffect(() => {
@@ -78,7 +76,6 @@ function App() {
     }, []);
 
 
-
     useEffect(() => {
         const messagesRef = ref(database, "messages");
         onValue(messagesRef, (snapshot) => {
@@ -95,7 +92,7 @@ function App() {
 
                             // Update the message to mark it as read
                             const messageRef = child(messagesRef, messageId);
-                            update(messageRef, { isRead: true });
+                            update(messageRef, {isRead: true});
                         }
                     });
 
@@ -104,6 +101,11 @@ function App() {
             }
         });
     }, [user, isPrivateChat]);
+
+    const onEmojiClick = (emojiKey) => {
+        setMessage((prevMessage) => prevMessage + emojiKey);
+    };
+
 
     const handleSignOut = async () => {
         try {
@@ -149,19 +151,6 @@ function App() {
             setMessage("");
         }
     };
-
-    const onEmojiClick = (emojiObject, event) => {
-        const emoji = emojiObject.emoji;
-        setMessage((prevMessage) => prevMessage + emoji);
-    };
-
-    const emojiPicker = (
-        <Picker
-            onEmojiClick={onEmojiClick}
-            disableAutoFocus={true}
-            style={{ position: "absolute", bottom: "40px", right: "10px" }}
-        />
-    );
 
     return (
         <AuthProvider>
@@ -209,14 +198,10 @@ function App() {
                                         placeholder="Введите сообщение"
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
-                                        style={{ width: "100%" }}
-                                        suffix={
-                                            <Dropdown overlay={emojiPicker} trigger={["click"]} placement="topRight">
-                                                <Button icon={<SmileOutlined />} />
-                                            </Dropdown>
-                                        }
+                                        style={{width: "100%"}}
                                     />
-                                    <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
+                                    <EmojiPicker onEmojiClick={onEmojiClick} />
+                                    <Button type="primary" htmlType="submit" icon={<SendOutlined/>}>
                                         Отправить
                                     </Button>
                                 </form>
@@ -236,10 +221,10 @@ function App() {
                             </>
                         ) : (
                             <>
-                                <AuthButtons />
+                                <AuthButtons/>
                                 <Routes>
-                                    <Route path="/register" element={<Register />} />
-                                    <Route path="/login" element={<Login />} />
+                                    <Route path="/register" element={<Register/>}/>
+                                    <Route path="/login" element={<Login/>}/>
                                 </Routes>
                             </>
                         )}
