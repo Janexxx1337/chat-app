@@ -25,20 +25,42 @@ body {
     margin-right: 2rem;
 }
 
+
 .chat {
-    width: 500px;
-    height: 85%;
     border: 2px solid #ccc;
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     background-color: #f8f8f8;
     overflow-y: auto;
+    width: 40%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
+
+.chat.not-logged-in {
+    height: auto;
+    width: auto;
+}
+
+.chat.not-logged-in {
+    height: auto;
+}
+
 
 .chat > div:nth-child(1) {
 text-align: center;
+    font-size: 18px;
 }
+
+div.chat > button {
+    display: block;
+    margin: 0 auto;
+    font-size: 18px;
+}
+
 
 span svg {
     cursor: pointer;

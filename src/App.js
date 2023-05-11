@@ -14,28 +14,8 @@ import {AuthProvider} from "./Components/useAuth";
 import DeleteModal from "./Components/DeleteModal";
 import MessageContainer from "./Components/MessageContainer";
 import EmojiPicker from "./Components/EmojiPicker";
+import AuthButtons from "./Components/AuthButtons";
 
-const AuthButtons = () => {
-    const navigate = useNavigate();
-
-    const handleNavigation = (path) => {
-        navigate(path);
-    };
-
-    return (
-        <div className={"buttons"}>
-            <Button
-                type="primary"
-                onClick={() => handleNavigation("/register")}
-            >
-                Регистрация
-            </Button>
-            <Button className={"exit"} type="primary" onClick={() => handleNavigation("/login")}>
-                Вход
-            </Button>
-        </div>
-    );
-};
 
 function App() {
     const [message, setMessage] = useState("");
@@ -155,6 +135,7 @@ function App() {
     return (
         <AuthProvider>
             <Router>
+
                 <div className="container">
                     <div className="chat">
                         {user ? (
