@@ -2,15 +2,14 @@ import {useNavigate} from "react-router-dom";
 import React, {useState} from "react";
 import {Button} from "antd";
 
-const AuthButtons = () => {
+const AuthButtons = (prop) => {
     const navigate = useNavigate();
 
     const handleNavigation = (path) => {
         navigate(path);
     };
-    const [user, setUser] = useState(null);
     return (
-        <div className={`chat ${user ? "logged-in" : "not-logged-in"}`}>
+        <div className={`chat ${prop.user ? "logged-in" : "not-logged-in"}`}>
             <div className={"buttons"}>
                 <Button
                     type="primary"

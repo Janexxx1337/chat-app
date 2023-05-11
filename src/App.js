@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from "react";
 import "./App.css";
-import {Input, Button, Dropdown} from "antd";
-import {SendOutlined, SmileOutlined} from "@ant-design/icons";
+import {Input, Button } from "antd";
+import {SendOutlined } from "@ant-design/icons";
 import {auth, database} from "./Components/FirebaseConfig";
 import {onAuthStateChanged, signOut} from "firebase/auth";
 import {ref, onValue, push, remove, child, update} from "firebase/database";
-import {BrowserRouter as Router, Route, Routes, Link, useNavigate} from "react-router-dom";
+import {BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import PrivateChat from "./Components/PrivateChat";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
@@ -202,7 +202,8 @@ function App() {
                             </>
                         ) : (
                             <>
-                                <AuthButtons/>
+                                <AuthButtons
+                                user={user}/>
                                 <Routes>
                                     <Route path="/register" element={<Register/>}/>
                                     <Route path="/login" element={<Login/>}/>

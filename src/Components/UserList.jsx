@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { List, Badge } from 'antd';
-import { NotificationOutlined } from '@ant-design/icons';
+import { NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import { ref, onValue } from 'firebase/database';
 import { database } from './FirebaseConfig';
 
@@ -35,27 +35,33 @@ const UserList = ({ setSelectedUser, enterPrivateChat, user, setPrivateChatUser 
         });
     }, []);
 
-    const filteredUsers = users.filter((u) => u.uid !== user?.uid); // Отфильтруйте текущего пользователя
+    const filteredUsers = users.filter((u) => u.uid !== user?.uid);
+
+    const getRandomRGBColor = () => {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgb(${r}, ${g}, ${b})`;
+    };
 
     const handleUserClick = (userId) => {
         setSelectedUser(userId);
         enterPrivateChat();
     };
 
-
     return (
         <div>
             <h3>Список пользователей:</h3>
             <List
-                dataSource={filteredUsers} // Используйте отфильтрованный список пользователей
-                renderItem={(user) => (
+                dataSource={filteredUsers}
+                renderItem={(user, index) => (
                     <List.Item
                         key={user.uid}
                         onClick={() => handleUserClick(user.uid)}
                         style={{ cursor: 'pointer' }}
                     >
                         <Badge dot={usersWithNotifications.includes(user.uid)}>
-                            {user.displayName}
+                            <UserOutlined style={{ color: getRandomRGBColor() }} /> {user.displayName}
                             {usersWithNotifications.includes(user.uid) && (
                                 <NotificationOutlined style={{ marginLeft: 8 }} />
                             )}
