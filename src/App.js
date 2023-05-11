@@ -13,6 +13,7 @@ import UserList from "./Components/UserList";
 import { AuthProvider } from "./Components/useAuth";
 import DeleteModal from "./Components/DeleteModal";
 import MessageContainer from "./Components/MessageContainer";
+import Picker from 'emoji-picker-react';
 
 
 const AuthButtons = () => {
@@ -46,7 +47,9 @@ function App() {
 
     const [isPrivateChat, setIsPrivateChat] = useState(false);
     const [isPublicChatVisible, setIsPublicChatVisible] = useState(true);
+    const [privateChatUser, setPrivateChatUser] = useState(null);
 
+    const [chosenEmoji, setChosenEmoji] = useState(null);
     const [usersData, setUsersData] = useState({});
     const [selectedMessageId, setSelectedMessageId] = useState(null);
 
@@ -103,7 +106,6 @@ function App() {
         });
     }, [user, isPrivateChat]);
 
-
     const handleSignOut = async () => {
         try {
             await signOut(auth);
@@ -136,7 +138,7 @@ function App() {
     const onSubmit = (e) => {
         e.preventDefault();
 
-        if (message.trim() !== "") {
+        if (message.trim()) {
             const messagesRef = ref(database, "messages");
             const messageData = {
                 sender: user.uid,
@@ -148,6 +150,11 @@ function App() {
             push(messagesRef, messageData);
             setMessage("");
         }
+    };
+
+    const onEmojiClick = (emojiObject, event) => {
+        const emoji = emojiObject.emoji;
+        setMessage((prevMessage) => prevMessage + emoji);
     };
 
 
@@ -197,6 +204,9 @@ function App() {
                                         onChange={(e) => setMessage(e.target.value)}
                                         style={{ width: "100%" }}
                                     />
+                                    <div>
+                                        <Picker onEmojiClick={onEmojiClick} />
+                                    </div>
                                     <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
                                         Отправить
                                     </Button>
@@ -228,7 +238,13 @@ function App() {
                             </>
                         )}
                     </div>
-                    {user && <UserList setSelectedUser={setSelectedUser} enterPrivateChat={enterPrivateChat} user={user} />}
+                    {user && <UserList
+                        setSelectedUser={setSelectedUser}
+                        enterPrivateChat={enterPrivateChat}
+                        user={user}
+                        setPrivateChatUser={setPrivateChatUser}
+                    />
+                    }
                 </div>
             </Router>
         </AuthProvider>

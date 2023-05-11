@@ -4,7 +4,7 @@ import { NotificationOutlined } from '@ant-design/icons';
 import { ref, onValue } from 'firebase/database';
 import { database } from './FirebaseConfig';
 
-const UserList = ({ setSelectedUser, enterPrivateChat, user }) => {
+const UserList = ({ setSelectedUser, enterPrivateChat, user, setPrivateChatUser }) => {
     const [users, setUsers] = useState([]);
     const [usersWithNotifications, setUsersWithNotifications] = useState([]);
 
@@ -41,6 +41,7 @@ const UserList = ({ setSelectedUser, enterPrivateChat, user }) => {
         setSelectedUser(userId);
         enterPrivateChat();
     };
+
 
     return (
         <div>
