@@ -81,6 +81,7 @@ div.chat > button {
 
 span svg {
     cursor: pointer;
+    margin-right: 7px;
 }
 
 .current-user {

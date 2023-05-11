@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { List, Badge } from 'antd';
-import { NotificationOutlined, UserOutlined } from '@ant-design/icons';
+import {ManOutlined, NotificationOutlined, SmileOutlined, UserOutlined, WomanOutlined} from '@ant-design/icons';
 import { ref, onValue } from 'firebase/database';
 import { database } from './FirebaseConfig';
 
 const UserList = ({ setSelectedUser, enterPrivateChat, user, setPrivateChatUser }) => {
     const [users, setUsers] = useState([]);
     const [usersWithNotifications, setUsersWithNotifications] = useState([]);
+
+    const icons = [<UserOutlined />, <WomanOutlined />, <ManOutlined />, <SmileOutlined />];
 
     useEffect(() => {
         const messagesRef = ref(database, 'messages');
@@ -61,7 +63,8 @@ const UserList = ({ setSelectedUser, enterPrivateChat, user, setPrivateChatUser 
                         style={{ cursor: 'pointer' }}
                     >
                         <Badge dot={usersWithNotifications.includes(user.uid)}>
-                            <UserOutlined style={{ color: getRandomRGBColor() }} /> {user.displayName}
+                            {React.cloneElement(icons[index % icons.length], { style: { color: getRandomRGBColor() } })}
+                            {user.displayName}
                             {usersWithNotifications.includes(user.uid) && (
                                 <NotificationOutlined style={{ marginLeft: 8 }} />
                             )}
