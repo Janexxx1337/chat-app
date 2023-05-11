@@ -149,8 +149,9 @@ function App() {
                 <Switch
                     checked={isDarkTheme}
                     onChange={() => setIsDarkTheme(prev => !prev)}
-                    checkedChildren="Темная тема"
-                    unCheckedChildren="Светлая тема"
+                    checkedChildren="Светлая тема"
+                    unCheckedChildren="Темная тема"
+                    className={'switch'}
                 />
                 <div className="container">
                     <div className="chat">

@@ -11,6 +11,15 @@ body {
     fill: black;
 }
 
+.dark-theme .current-user {
+    color: white;
+}
+
+.switch {
+    margin-top: 1%;
+    margin-left: 2%;
+}
+
 .App {
     display: flex;
     flex-direction: column;
@@ -59,7 +68,7 @@ body {
 
 
 .chat > div:nth-child(1) {
-text-align: center;
+    text-align: center;
     font-size: 18px;
 }
 
@@ -173,6 +182,7 @@ div:nth-child(4) > div > div > div > div > button {
         width: auto;
     }
 }
+
 @media (max-width: 600px) {
     .input-form {
         flex-direction: column;
