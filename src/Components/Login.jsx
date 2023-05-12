@@ -6,7 +6,7 @@ import { auth } from "./FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
-import githubLogo from "../github-logo.svg";
+import githubLogo from "../images/github-logo.svg";
 import { GoogleAuthProvider } from "firebase/auth";
 import googleLogo from '../images/google.svg'
 
