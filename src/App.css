@@ -11,8 +11,12 @@ body {
     fill: black;
 }
 
-.dark-theme .current-user {
-    color: white;
+.dark-theme {
+    color: #000;
+}
+
+.dark-theme .public a{
+    color: #fff;
 }
 
 .switch {
@@ -39,14 +43,14 @@ body {
 
 .user-list {
     width: 300px;
-    height: 90%;
+    height: 80%;
     overflow-y: auto;
     border: 2px solid #ccc;
     border-radius: 8px;
     padding: 25px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
-    background: rgb(248,248,248);
-    background: linear-gradient(180deg, rgba(248,248,248,1) 0%, rgba(232,232,232,1) 100%);
+    background: rgb(248, 248, 248);
+    background: linear-gradient(180deg, rgba(248, 248, 248, 1) 0%, rgba(232, 232, 232, 1) 100%);
 }
 
 .user-list .ant-list-item {
@@ -58,15 +62,17 @@ body {
 }
 
 .chat {
+    width: 40%;
+    height: 70%;
+    margin-bottom: 10%;
+    margin-top: 5%;
     border: 2px solid #ccc;
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
-    background: rgb(248,248,248);
-    background: linear-gradient(180deg, rgba(248,248,248,1) 0%, rgba(232,232,232,1) 100%);
+    background: rgb(248, 248, 248);
+    background: linear-gradient(180deg, rgba(248, 248, 248, 1) 0%, rgba(232, 232, 232, 1) 100%);
     overflow-y: auto;
-    width: 40%;
-    height: 70%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -79,8 +85,11 @@ body {
     border-radius: 4px;
     padding: 20px;
     max-width: 800px;
-    margin: 0 auto;
     font-family: Arial, sans-serif;
+}
+
+.logo {
+    font-size: 24px;
 }
 
 .chat .current-user {
@@ -145,7 +154,6 @@ body {
 .input-form input:focus {
     box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.2);
 }
-
 
 
 .chat > div:nth-child(1) {
@@ -268,7 +276,7 @@ aside > div.Flex.epr-preview.FlexRow {
 
     .user-list {
         margin-top: 10%;
-      height: 50%;
+        height: 50%;
         overflow-y: auto;
     }
 

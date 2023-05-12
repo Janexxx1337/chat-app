@@ -15,6 +15,7 @@ import MessageContainer from "./Components/MessageContainer";
 import AuthButtons from "./Components/AuthButtons";
 import MessageForm from "./Components/MessageForm";
 import PublicChat from "./Components/PublicChat";
+import {MessageOutlined} from "@ant-design/icons";
 
 function App() {
     const [message, setMessage] = useState("");
@@ -135,10 +136,39 @@ function App() {
                 isRead: false,
             };
             push(messagesRef, messageData);
+
+            if (isPrivateChat) {
+                const notificationsRef = ref(database, "notifications");
+                const notificationData = {
+                    sender: user.uid,
+                    senderName: user.displayName,
+                    receiver: selectedUser,
+                    text: message,
+                    isRead: false,
+                };
+                push(notificationsRef, notificationData);
+            }
+
             setMessage("");
         }
     };
 
+    useEffect(() => {
+        if (user) {
+            const notificationsRef = ref(database, "notifications");
+            onValue(notificationsRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    // Отфильтровываем уведомления, которые предназначены для текущего пользователя
+                    const userNotifications = Object.entries(data).filter(
+                        ([id, notification]) => notification.receiver === user.uid
+                    ).map(([id, notification]) => ({ ...notification, id }));
+
+                    setNotifications(userNotifications);
+                }
+            });
+        }
+    }, [user]);
     return (
         <AuthProvider>
             <Router>
@@ -154,7 +184,8 @@ function App() {
                 <div className="container">
                     <div className={`chat ${user ? "logged-in" : "not-logged-in"}`}>
                         <div className="chat-header">
-                            <div className="title">ChatApp</div>
+
+                            <div className="title"><MessageOutlined className="logo" />JCHAT </div>
                             {user && <div className="current-user">Здравствуйте, {user.displayName}</div>}
                         </div>
                         {user ? (
