@@ -1,43 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import "./App.css";
-import { Input, Button, Dropdown, Menu } from "antd";
-import { SendOutlined, SmileOutlined } from "@ant-design/icons";
-import { auth, database } from "./Components/FirebaseConfig";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-import { ref, onValue, push, remove, child, update } from "firebase/database";
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from "react-router-dom";
+import {Input, Button, Switch } from "antd";
+import {SendOutlined } from "@ant-design/icons";
+import {auth, database} from "./Components/FirebaseConfig";
+import {onAuthStateChanged, signOut} from "firebase/auth";
+import {ref, onValue, push, remove, child, update} from "firebase/database";
+import {BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import PrivateChat from "./Components/PrivateChat";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
 import UserList from "./Components/UserList";
-import { AuthProvider } from "./Components/useAuth";
+import {AuthProvider} from "./Components/useAuth";
 import DeleteModal from "./Components/DeleteModal";
 import MessageContainer from "./Components/MessageContainer";
-import Picker from 'emoji-picker-react';
-
-const AuthButtons = () => {
-    const navigate = useNavigate();
-
-    const handleNavigation = (path) => {
-        navigate(path);
-    };
+import EmojiPicker from "./Components/EmojiPicker";
+import AuthButtons from "./Components/AuthButtons";
 
 
-
-    return (
-        <div className={"buttons"}>
-            <Button
-                type="primary"
-                onClick={() => handleNavigation("/register")}
-            >
-                Регистрация
-            </Button>
-            <Button className={"exit"} type="primary" onClick={() => handleNavigation("/login")}>
-                Вход
-            </Button>
-        </div>
-    );
-};
 
 function App() {
     const [message, setMessage] = useState("");
@@ -50,13 +29,13 @@ function App() {
     const [isPublicChatVisible, setIsPublicChatVisible] = useState(true);
     const [privateChatUser, setPrivateChatUser] = useState(null);
 
-    const [chosenEmoji, setChosenEmoji] = useState(null);
     const [usersData, setUsersData] = useState({});
     const [selectedMessageId, setSelectedMessageId] = useState(null);
 
     const [lastNotificationMessageRef, setLastNotificationMessageRef] = useState(null);
     const [notifications, setNotifications] = useState({});
 
+    const [isDarkTheme, setIsDarkTheme] = useState(false);
 
 
     useEffect(() => {
@@ -79,20 +58,14 @@ function App() {
         });
     }, []);
 
+
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-            if (!user) {
-                navigate("/login");
-            }
-        });
-
-        return () => {
-            unsubscribe();
-        };
-    }, [navigate]);
-
-
+        if (isDarkTheme) {
+            document.body.classList.add("dark-theme");
+        } else {
+            document.body.classList.remove("dark-theme");
+        }
+    }, [isDarkTheme]);
 
     useEffect(() => {
         const messagesRef = ref(database, "messages");
@@ -110,7 +83,7 @@ function App() {
 
                             // Update the message to mark it as read
                             const messageRef = child(messagesRef, messageId);
-                            update(messageRef, { isRead: true });
+                            update(messageRef, {isRead: true});
                         }
                     });
 
@@ -119,6 +92,11 @@ function App() {
             }
         });
     }, [user, isPrivateChat]);
+
+    const onEmojiClick = (emojiKey) => {
+        setMessage((prevMessage) => prevMessage + emojiKey);
+    };
+
 
     const handleSignOut = async () => {
         try {
@@ -165,22 +143,16 @@ function App() {
         }
     };
 
-    const onEmojiClick = (emojiObject, event) => {
-        const emoji = emojiObject.emoji;
-        setMessage((prevMessage) => prevMessage + emoji);
-    };
-
-    const emojiPicker = (
-        <Picker
-            onEmojiClick={onEmojiClick}
-            disableAutoFocus={true}
-            style={{ position: "absolute", bottom: "40px", right: "10px" }}
-        />
-    );
-
     return (
         <AuthProvider>
             <Router>
+                <Switch
+                    checked={isDarkTheme}
+                    onChange={() => setIsDarkTheme(prev => !prev)}
+                    checkedChildren="Светлая тема"
+                    unCheckedChildren="Темная тема"
+                    className={'switch'}
+                />
                 <div className="container">
                     <div className="chat">
                         {user ? (
@@ -224,14 +196,10 @@ function App() {
                                         placeholder="Введите сообщение"
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
-                                        style={{ width: "100%" }}
-                                        suffix={
-                                            <Dropdown overlay={emojiPicker} trigger={["click"]} placement="topRight">
-                                                <Button icon={<SmileOutlined />} />
-                                            </Dropdown>
-                                        }
+                                        style={{width: "100%"}}
                                     />
-                                    <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
+                                    <EmojiPicker onEmojiClick={onEmojiClick} />
+                                    <Button type="primary" htmlType="submit" icon={<SendOutlined/>}>
                                         Отправить
                                     </Button>
                                 </form>
@@ -251,10 +219,11 @@ function App() {
                             </>
                         ) : (
                             <>
-                                <AuthButtons />
+                                <AuthButtons
+                                    user={user}/>
                                 <Routes>
-                                    <Route path="/register" element={<Register />} />
-                                    <Route path="/login" element={<Login />} />
+                                    <Route path="/register" element={<Register/>}/>
+                                    <Route path="/login" element={<Login/>}/>
                                 </Routes>
                             </>
                         )}
