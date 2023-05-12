@@ -154,7 +154,7 @@ function App() {
                     className={'switch'}
                 />
                 <div className="container">
-                    <div className="chat">
+                    <div className={`chat ${user ? "logged-in" : "not-logged-in"}`}>
                         {user ? (
                             <>
                                 <div>
@@ -219,8 +219,7 @@ function App() {
                             </>
                         ) : (
                             <>
-                                <AuthButtons
-                                    user={user}/>
+                                <AuthButtons />
                                 <Routes>
                                     <Route path="/register" element={<Register/>}/>
                                     <Route path="/login" element={<Login/>}/>
