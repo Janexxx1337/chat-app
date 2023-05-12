@@ -127,11 +127,6 @@ body {
     height: auto;
 }
 
-.message-container {
-    flex: 1;
-    overflow-y: auto;
-}
-
 .message-container > div {
     margin-bottom: 20px;
 }
@@ -201,7 +196,6 @@ span svg {
     text-align: center;
 }
 
-
 .github-button, .google-button {
     background-color: #fff;
     color: #000;
@@ -215,7 +209,7 @@ span svg {
     padding: 20px;
 }
 
-div > ul > li {
+div > li {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 20px;
@@ -275,8 +269,6 @@ aside > div.Flex.epr-preview.FlexRow {
     }
 
     .user-list {
-        margin-top: 10%;
-        height: 50%;
         overflow-y: auto;
     }
 
@@ -313,5 +305,4 @@ aside > div.Flex.epr-preview.FlexRow {
     .chat .message-container {
         padding: 20px;
     }
-
 }
