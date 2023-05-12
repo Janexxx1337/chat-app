@@ -16,7 +16,6 @@ body {
 }
 
 .switch {
-    margin-top: 1%;
     margin-left: 2%;
 }
 
@@ -67,11 +66,48 @@ body {
     background: linear-gradient(180deg, rgba(248,248,248,1) 0%, rgba(232,232,232,1) 100%);
     overflow-y: auto;
     width: 40%;
-    height: 90%;
+    height: 70%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
+
+
+.chat {
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.chat .current-user {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.chat .message-container {
+    border: 1px solid #ddd;
+    padding: 10px;
+    height: 400px;
+    overflow-y: scroll;
+    margin-bottom: 20px;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.chat-header .title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
 
 .chat.not-logged-in {
     height: auto;
@@ -81,6 +117,35 @@ body {
 .chat.not-logged-in {
     height: auto;
 }
+
+.message-container {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.message-container > div {
+    margin-bottom: 20px;
+}
+
+.input-form {
+    margin: 10px 0;
+}
+
+.input-form input {
+    margin-top: 20px;
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.input-form input:focus {
+    box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.2);
+}
+
 
 
 .chat > div:nth-child(1) {
@@ -101,10 +166,8 @@ span svg {
 }
 
 .current-user {
-    position: fixed;
-    top: 10px;
-    right: 2%;
-    font-size: 18px;
+    line-height: 13px;
+    font-size: 13px;
     font-weight: bold;
     color: #444;
 }
@@ -114,11 +177,20 @@ span svg {
     margin-top: 20px;
 }
 
+#login > div button {
+    display: block;
+    margin: 0 auto;
+}
+
 .input-form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     width: 100%;
+}
+
+.public {
+    text-align: center;
 }
 
 
@@ -199,6 +271,10 @@ aside > div.Flex.epr-preview.FlexRow {
       height: 50%;
         overflow-y: auto;
     }
+
+    .current-user {
+        display: none;
+    }
 }
 
 @media (max-width: 600px) {
@@ -222,7 +298,4 @@ aside > div.Flex.epr-preview.FlexRow {
         margin: 20px auto 0;
     }
 
-    .current-user {
-        display: none;
-    }
 }

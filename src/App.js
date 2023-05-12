@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from "react";
 import "./App.css";
-import {Input, Button, Switch } from "antd";
-import {SendOutlined } from "@ant-design/icons";
+import { Button, Switch } from "antd";
 import {auth, database} from "./Components/FirebaseConfig";
 import {onAuthStateChanged, signOut} from "firebase/auth";
 import {ref, onValue, push, remove, child, update} from "firebase/database";
@@ -13,10 +12,9 @@ import UserList from "./Components/UserList";
 import {AuthProvider} from "./Components/useAuth";
 import DeleteModal from "./Components/DeleteModal";
 import MessageContainer from "./Components/MessageContainer";
-import EmojiPicker from "./Components/EmojiPicker";
 import AuthButtons from "./Components/AuthButtons";
-
-
+import MessageForm from "./Components/MessageForm";
+import PublicChat from "./Components/PublicChat";
 
 function App() {
     const [message, setMessage] = useState("");
@@ -26,7 +24,6 @@ function App() {
     const [selectedUser, setSelectedUser] = useState(null);
 
     const [isPrivateChat, setIsPrivateChat] = useState(false);
-    const [isPublicChatVisible, setIsPublicChatVisible] = useState(true);
     const [privateChatUser, setPrivateChatUser] = useState(null);
 
     const [usersData, setUsersData] = useState({});
@@ -81,7 +78,6 @@ function App() {
                         if (message.receiver === user.uid && !message.isRead) {
                             newNotifications[messageId] = message;
 
-                            // Update the message to mark it as read
                             const messageRef = child(messagesRef, messageId);
                             update(messageRef, {isRead: true});
                         }
@@ -146,6 +142,8 @@ function App() {
     return (
         <AuthProvider>
             <Router>
+                <PublicChat
+                    handleSignOut={handleSignOut}/>
                 <Switch
                     checked={isDarkTheme}
                     onChange={() => setIsDarkTheme(prev => !prev)}
@@ -155,55 +153,41 @@ function App() {
                 />
                 <div className="container">
                     <div className={`chat ${user ? "logged-in" : "not-logged-in"}`}>
+                        <div className="chat-header">
+                            <div className="title">ChatApp</div>
+                            {user && <div className="current-user">Здравствуйте, {user.displayName}</div>}
+                        </div>
                         {user ? (
                             <>
-                                <div>
-                                    <Link to="/">Общий чат</Link> | <Link to="/private">Личный диалог</Link>
-                                </div>
-                                <Button type="link" onClick={handleSignOut}>
-                                    Выйти
-                                </Button>
-                                {user && <div className="current-user">Здравствуйте, {user.displayName}</div>}
 
                                 <Routes>
                                     <Route
                                         path="/"
                                         element={
-                                            isPublicChatVisible && (
+                                            <div className="message-container">
                                                 <MessageContainer
                                                     user={user}
                                                     setSelectedMessageId={setSelectedMessageId}
                                                     messages={messages}
                                                     usersData={usersData}
                                                 />
-                                            )
+                                            </div>
                                         }
                                     />
                                     <Route
                                         path="/private"
                                         element={
-                                            <PrivateChat
-                                                messages={messages}
-                                                user={user}
-                                                selectedUser={selectedUser}
-                                                notifications={notifications}
-                                            />
+                                            <div className="message-container">
+                                                <PrivateChat
+                                                    messages={messages}
+                                                    user={user}
+                                                    selectedUser={selectedUser}
+                                                    notifications={notifications}
+                                                />
+                                            </div>
                                         }
                                     />
                                 </Routes>
-                                <form onSubmit={onSubmit} className="input-form">
-                                    <Input
-                                        placeholder="Введите сообщение"
-                                        value={message}
-                                        onChange={(e) => setMessage(e.target.value)}
-                                        style={{width: "100%"}}
-                                    />
-                                    <EmojiPicker onEmojiClick={onEmojiClick} />
-                                    <Button type="primary" htmlType="submit" icon={<SendOutlined/>}>
-                                        Отправить
-                                    </Button>
-                                </form>
-
                                 {selectedMessageId && (
                                     <DeleteModal
                                         message={messages.find((msg) => msg.id === selectedMessageId)}
@@ -216,17 +200,24 @@ function App() {
                                         }}
                                     />
                                 )}
+                                <MessageForm
+                                    onSubmit={onSubmit}
+                                    message={message}
+                                    setMessage={setMessage}
+                                    onEmojiClick={onEmojiClick}
+                                />
                             </>
                         ) : (
                             <>
                                 <AuthButtons />
                                 <Routes>
-                                    <Route path="/register" element={<Register/>}/>
-                                    <Route path="/login" element={<Login/>}/>
+                                    <Route path="/register" element={<Register />} />
+                                    <Route path="/login" element={<Login />} />
                                 </Routes>
                             </>
                         )}
                     </div>
+
                     {user && (
                         <UserList
                             setSelectedUser={setSelectedUser}
