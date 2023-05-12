@@ -52,7 +52,7 @@ const UserList = ({ setSelectedUser, enterPrivateChat, user, setPrivateChatUser 
     };
 
     return (
-        <div>
+        <div className={'user-list'}>
             <h3>Список пользователей:</h3>
             <List
                 dataSource={filteredUsers}

@@ -24,6 +24,7 @@
     "os-browserify": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-emoji-render": "^2.0.1",
     "react-firebase-hooks": "^5.1.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.11.0",
@@ -64,6 +65,7 @@
     ]
   },
   "devDependencies": {
+    "css-loader": "^6.7.3",
     "dotenv-webpack": "^8.0.1"
   }
 }
