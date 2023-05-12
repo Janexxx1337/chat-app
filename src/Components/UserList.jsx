@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { List, Badge } from 'antd';
-import {ManOutlined, NotificationOutlined, SmileOutlined, UserOutlined, WomanOutlined} from '@ant-design/icons';
+import { ManOutlined, NotificationOutlined, SmileOutlined, UserOutlined, WomanOutlined } from '@ant-design/icons';
 import { ref, onValue } from 'firebase/database';
 import { database } from './FirebaseConfig';
+import { useNavigate } from "react-router-dom";
 
-const UserList = ({ setSelectedUser, enterPrivateChat, user, setPrivateChatUser }) => {
+
+const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser }) => {
     const [users, setUsers] = useState([]);
     const [usersWithNotifications, setUsersWithNotifications] = useState([]);
+
+    const navigate = useNavigate();
 
     const icons = [<UserOutlined />, <WomanOutlined />, <ManOutlined />, <SmileOutlined />];
 
@@ -48,9 +52,10 @@ const UserList = ({ setSelectedUser, enterPrivateChat, user, setPrivateChatUser 
 
     const handleUserClick = (userId) => {
         setSelectedUser(userId);
-        enterPrivateChat();
+        setPrivateChatUser(userId);
+        setIsPrivateChat(true);
+        navigate('/private');
     };
-
     return (
         <div className={'user-list'}>
             <h3>Список пользователей:</h3>

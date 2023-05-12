@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from "react";
 import "./App.css";
-import { Button, Switch } from "antd";
+import { Switch } from "antd";
 import {auth, database} from "./Components/FirebaseConfig";
 import {onAuthStateChanged, signOut} from "firebase/auth";
 import {ref, onValue, push, remove, child, update} from "firebase/database";
-import {BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import {BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateChat from "./Components/PrivateChat";
 import Register from "./Components/Register";
 import Login from "./Components/Login";
@@ -255,6 +255,7 @@ function App() {
                             enterPrivateChat={enterPrivateChat}
                             user={user}
                             setPrivateChatUser={setPrivateChatUser}
+                            setIsPrivateChat={setIsPrivateChat}
                         />
                     )}
                 </div>

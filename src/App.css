@@ -291,6 +291,10 @@ aside > div.Flex.epr-preview.FlexRow {
         justify-content: space-between;
     }
 
+    .chat {
+        height: 100%;
+    }
+
     .user-list {
         width: auto;
     }
@@ -304,6 +308,10 @@ aside > div.Flex.epr-preview.FlexRow {
     button.ant-btn {
         width: 100%;
         margin: 20px auto 0;
+    }
+
+    .chat .message-container {
+        padding: 20px;
     }
 
 }
