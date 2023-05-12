@@ -7,7 +7,8 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import githubLogo from "../github-logo.svg";
-
+import { GoogleAuthProvider } from "firebase/auth";
+import googleLogo from '../images/google.svg'
 
 const Login = () => {
     const navigate = useNavigate();
@@ -35,6 +36,18 @@ const Login = () => {
         }
     };
 
+    const signInWithGoogle = async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            await signInWithPopup(auth, provider);
+            message.success("Вы успешно вошли с помощью аккаунта Google!");
+            navigate("/");
+        } catch (error) {
+            console.error("Ошибка входа с аккаунтом Google:", error);
+            message.error("Ошибка входа с аккаунтом Google, пожалуйста, попробуйте еще раз.");
+        }
+    };
+
     return (
         <Form
             name="login"
@@ -45,6 +58,12 @@ const Login = () => {
                 <img src={githubLogo} alt="GitHub Logo" width="20" />
                 Войти с помощью GitHub
             </Button>
+            <Button style={{marginBottom: '20px'}} className="google-button" onClick={signInWithGoogle}>
+                <img src={googleLogo} alt="google-logo" width="20"/>
+                Войти с помощью Google
+            </Button>
+
+
             <Form.Item
                 name="email"
                 rules={[{ required: true, message: "Пожалуйста, введите вашу электронную почту!" }]}
