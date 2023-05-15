@@ -297,6 +297,10 @@ aside > div.Flex.epr-preview.FlexRow {
     .current-user {
         display: none;
     }
+
+    .button-fixed button.ant-btn  {
+        width: 50%;
+    }
 }
 
 @media (max-width: 600px) {

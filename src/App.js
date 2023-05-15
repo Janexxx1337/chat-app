@@ -268,14 +268,17 @@ function App() {
                         )}
                     </div>
                     {windowWidth && user && (
-                        <Button
-                            type="primary"
-                            icon={<UserOutlined />}
-                            size="large"
-                            onClick={() => setIsUserListVisible(prev => !prev)}
-                            style={{ position: 'fixed', right: '2px', top: '5px' }}
-                        />
-
+                     <div className={'button-fixed'}>
+                         <Button
+                             type="primary"
+                             icon={<UserOutlined />}
+                             size="large"
+                             onClick={() => setIsUserListVisible(prev => !prev)}
+                             style={{ position: 'fixed', right: '2px', top: '5px' }}
+                         >
+                             Пользователи
+                         </Button>
+                     </div>
                     )}
                     {user && (
                         <UserList

@@ -68,7 +68,6 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
     return (
         isUserListVisible && (
             <div className={'user-list'}>
-                <h3>Список пользователей:</h3>
                 <Input
                     placeholder="Поиск по контактам..."
                     prefix={<SearchOutlined />}
