@@ -87,6 +87,10 @@ body {
     max-width: 800px;
     font-family: Arial, sans-serif;
 }
+.ant-pagination {
+    display: flex;
+    justify-content: center;
+}
 
 .logo {
     font-size: 24px;

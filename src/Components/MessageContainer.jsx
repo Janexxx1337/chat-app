@@ -1,5 +1,5 @@
 import { useSwipeable } from 'react-swipeable';
-import { List, Pagination } from "antd";
+import { List } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { isEmpty } from "lodash";
 import React, { useState } from "react";

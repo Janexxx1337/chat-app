@@ -15,7 +15,7 @@ import MessageContainer from "./Components/MessageContainer";
 import AuthButtons from "./Components/AuthButtons";
 import MessageForm from "./Components/MessageForm";
 import PublicChat from "./Components/PublicChat";
-import {MessageOutlined, UserOutlined} from "@ant-design/icons";
+import {AliwangwangOutlined, UserOutlined} from "@ant-design/icons";
 
 function App() {
     const [message, setMessage] = useState("");
@@ -204,8 +204,7 @@ function App() {
                 <div className="container">
                     <div className={`chat ${user ? "logged-in" : "not-logged-in"}`}>
                         <div className="chat-header">
-
-                            <div className="title"><MessageOutlined className="logo" />JCHAT </div>
+                            <div className="title"><AliwangwangOutlined className="logo" />Conversa </div>
                             {user && <div className="current-user">Здравствуйте, {user.displayName}</div>}
                         </div>
                         {user ? (
