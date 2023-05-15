@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import "./App.css";
-import { Switch } from "antd";
+import {Button, Switch} from "antd";
 import {auth, database} from "./Components/FirebaseConfig";
 import {onAuthStateChanged, signOut} from "firebase/auth";
 import {ref, onValue, push, remove, child, update} from "firebase/database";
@@ -15,7 +15,7 @@ import MessageContainer from "./Components/MessageContainer";
 import AuthButtons from "./Components/AuthButtons";
 import MessageForm from "./Components/MessageForm";
 import PublicChat from "./Components/PublicChat";
-import {MessageOutlined} from "@ant-design/icons";
+import {MessageOutlined, UserOutlined} from "@ant-design/icons";
 
 function App() {
     const [message, setMessage] = useState("");
@@ -27,6 +27,9 @@ function App() {
     const [isPrivateChat, setIsPrivateChat] = useState(false);
     const [privateChatUser, setPrivateChatUser] = useState(null);
 
+
+    const [isUserListVisible, setIsUserListVisible] = useState(true);
+
     const [usersData, setUsersData] = useState({});
     const [selectedMessageId, setSelectedMessageId] = useState(null);
 
@@ -34,6 +37,16 @@ function App() {
     const [notifications, setNotifications] = useState({});
 
     const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
 
     useEffect(() => {
@@ -248,7 +261,15 @@ function App() {
                             </>
                         )}
                     </div>
-
+                    {windowWidth <= 1024 && user && (
+                        <Button
+                            type="primary"
+                            icon={<UserOutlined />}
+                            size="large"
+                            onClick={() => setIsUserListVisible(prev => !prev)}
+                            style={{ position: 'fixed', right: '2px', top: '5px' }}
+                        />
+                    )}
                     {user && (
                         <UserList
                             setSelectedUser={setSelectedUser}
@@ -256,6 +277,8 @@ function App() {
                             user={user}
                             setPrivateChatUser={setPrivateChatUser}
                             setIsPrivateChat={setIsPrivateChat}
+                            isUserListVisible={isUserListVisible}
+                            setIsUserListVisible={setIsUserListVisible}
                         />
                     )}
                 </div>

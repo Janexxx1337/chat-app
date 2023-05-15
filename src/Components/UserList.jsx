@@ -5,9 +5,12 @@ import { ref, onValue } from 'firebase/database';
 import { database } from './FirebaseConfig';
 import { useNavigate } from "react-router-dom";
 
-const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser }) => {
+const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser, isUserListVisible, setIsUserListVisible }) => {
     const [users, setUsers] = useState([]);
     const [usersWithNotifications, setUsersWithNotifications] = useState([]);
+
+    const [isUserListOpen, setIsUserListOpen] = useState(false);
+
 
     const navigate = useNavigate();
 
@@ -48,32 +51,35 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser 
     };
 
     return (
-        <div className={'user-list'}>
-            <h3>Список пользователей:</h3>
-            <List
-                dataSource={filteredUsers}
-                renderItem={(user, index) => (
-                    <List.Item
-                        key={user.uid}
-                        onClick={() => handleUserClick(user.uid)}
-                        style={{ cursor: 'pointer' }}
-                    >
-                        <Badge dot={usersWithNotifications.includes(user.uid)}>
-                            <Tooltip title={user.displayName}>
-                                <Avatar
-                                    src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
-                                    icon={<UserOutlined />}
-                                />
-                            </Tooltip>
-                            {user.displayName}
-                            {usersWithNotifications.includes(user.uid) && (
-                                <NotificationOutlined style={{ marginLeft: 8 }} />
-                            )}
-                        </Badge>
-                    </List.Item>
-                )}
-            />
-        </div>
+        isUserListVisible && (
+            <div className={`user-list ${isUserListOpen ? 'user-list-open' : ''}`}>
+                <h3>Список пользователей:</h3>
+                <List
+                    dataSource={filteredUsers}
+                    renderItem={(user, index) => (
+                        <List.Item
+                            key={user.uid}
+                            onClick={() => handleUserClick(user.uid)}
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <Badge dot={usersWithNotifications.includes(user.uid)}>
+                                <Tooltip title={user.displayName}>
+                                    <Avatar
+                                        src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
+                                        icon={<UserOutlined />}
+                                    />
+                                </Tooltip>
+                                {user.displayName}
+                                {usersWithNotifications.includes(user.uid) && (
+                                    <NotificationOutlined style={{ marginLeft: 8 }} />
+                                )}
+                            </Badge>
+                        </List.Item>
+                    )}
+                />
+            </div>
+        )
+
     );
 };
 
