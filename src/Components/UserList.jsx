@@ -5,12 +5,11 @@ import { ref, onValue } from 'firebase/database';
 import { database } from './FirebaseConfig';
 import { useNavigate } from "react-router-dom";
 
-const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser, isUserListVisible, setIsUserListVisible }) => {
+const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser, isUserListVisible }) => {
     const [users, setUsers] = useState([]);
     const [usersWithNotifications, setUsersWithNotifications] = useState([]);
-
-    const [isUserListOpen, setIsUserListOpen] = useState(false);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
 
     const navigate = useNavigate();
 
@@ -50,12 +49,21 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
         navigate('/private');
     };
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const paginatedUsers = filteredUsers.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+    );
+
     return (
         isUserListVisible && (
             <div className={'user-list'}>
                 <h3>Список пользователей:</h3>
                 <List
-                    dataSource={filteredUsers}
+                    dataSource={paginatedUsers}
                     renderItem={(user, index) => (
                         <List.Item
                             key={user.uid}
@@ -76,6 +84,12 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
                             </Badge>
                         </List.Item>
                     )}
+                    pagination={{
+                        current: currentPage,
+                        pageSize,
+                        total: filteredUsers.length,
+                        onChange: handlePageChange
+                    }}
                 />
             </div>
         )

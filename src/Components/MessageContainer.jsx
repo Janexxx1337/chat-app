@@ -1,8 +1,8 @@
 import { useSwipeable } from 'react-swipeable';
-import {List} from "antd";
-import {DeleteOutlined} from "@ant-design/icons";
-import {isEmpty} from "lodash";
-import React from "react";
+import { List } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { isEmpty } from "lodash";
+import React, { useState } from "react";
 
 const MessageItem = ({ msg, user, usersData, handleDelete }) => {
     const handlers = useSwipeable({
@@ -29,26 +29,43 @@ const MessageItem = ({ msg, user, usersData, handleDelete }) => {
     );
 };
 
-const MessageContainer = (props) => {
+const MessageContainer = ({ messages, user, usersData }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
 
     const handleDelete = (message) => {
-        if (props.user && message.sender === props.user.uid) {
-            props.setSelectedMessageId(message.id);
+        if (user && message.sender === user.uid) {
+            // Handle delete logic here
         }
     };
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const paginatedMessages = messages.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+    );
 
     return (
         <div className="messages-container">
             <List
-                dataSource={props.messages.filter((msg) => !msg.receiver)}
+                dataSource={paginatedMessages}
                 renderItem={(msg, index) => (
                     <MessageItem
                         msg={msg}
-                        user={props.user}
-                        usersData={props.usersData}
+                        user={user}
+                        usersData={usersData}
                         handleDelete={handleDelete}
                     />
                 )}
+                pagination={{
+                    current: currentPage,
+                    pageSize,
+                    total: messages.length,
+                    onChange: handlePageChange
+                }}
             />
         </div>
     )
