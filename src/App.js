@@ -38,23 +38,6 @@ function App() {
 
     const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-    useEffect(() => {
-        const handleResize = () => {
-            setWindowWidth(window.innerWidth);
-            if (window.innerWidth <= 1024) {
-                setIsUserListVisible(false);
-            }
-        };
-
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, []);
-
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -267,7 +250,7 @@ function App() {
                             </>
                         )}
                     </div>
-                    {windowWidth && user && (
+                    {user && (
                      <div className={'button-fixed'}>
                          <Button
                              type="primary"
