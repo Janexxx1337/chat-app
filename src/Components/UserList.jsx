@@ -67,7 +67,7 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
 
     return (
         isUserListVisible && (
-            <div className={'user-list'} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div className={'user-list'}>
                 <h3>Список пользователей:</h3>
                 <Input
                     placeholder="Поиск по контактам..."
