@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Form, Input, Button } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { signInWithPopup, GithubAuthProvider, GoogleAuthProvider } from "firebase/auth";
+import { signInWithPopup, GithubAuthProvider } from "firebase/auth";
 import { auth } from "./FirebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 import githubLogo from "../images/github-logo.svg";
+import { GoogleAuthProvider } from "firebase/auth";
 import googleLogo from '../images/google.svg'
-import { getDatabase, ref, set, get, child } from "firebase/database";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -24,7 +24,6 @@ const Login = () => {
             setLoading(false);
         }
     };
-
     const signInWithGithub = async () => {
         const provider = new GithubAuthProvider();
         try {
@@ -40,24 +39,7 @@ const Login = () => {
     const signInWithGoogle = async () => {
         const provider = new GoogleAuthProvider();
         try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-
-            // Get database instance
-            const db = getDatabase();
-
-            // Check if user exists in database
-            const userRef = ref(db, 'users/' + user.uid);
-            get(userRef).then((snapshot) => {
-                if (!snapshot.exists()) {
-                    // User does not exist, add to database
-                    set(userRef, {
-                        username: user.displayName,
-                        email: user.email,
-                    });
-                }
-            });
-
+            await signInWithPopup(auth, provider);
             message.success("Вы успешно вошли с помощью аккаунта Google!");
             navigate("/");
         } catch (error) {
@@ -65,8 +47,6 @@ const Login = () => {
             message.error("Ошибка входа с аккаунтом Google, пожалуйста, попробуйте еще раз.");
         }
     };
-
-
 
     return (
         <Form

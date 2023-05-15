@@ -47,7 +47,7 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
 
     const filteredUsers = users
         .filter((u) => u.uid !== user?.uid)
-        .filter((u) => u.displayName !== 'undefined ' ? u.displayName = 'GoogleUser' : u.displayName.toLowerCase().includes(search.toLowerCase()));
+        .filter((u) => u.displayName.toLowerCase().includes(search.toLowerCase()));
 
     const handleUserClick = (userId) => {
         setSelectedUser(userId);
