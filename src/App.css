@@ -88,6 +88,7 @@ body {
 .ant-pagination {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .logo {
@@ -209,6 +210,7 @@ span svg {
 
 .ant-list .ant-list-item {
     padding: 20px;
+    min-width: 250px;
 }
 
 div > li {
@@ -267,7 +269,8 @@ aside > div.Flex.epr-preview.FlexRow {
     }
 
     .chat {
-        width: auto;
+        width: 100%;
+        padding: inherit;
     }
 
     .user-list {
@@ -291,6 +294,7 @@ aside > div.Flex.epr-preview.FlexRow {
 
     .user-list {
         width: auto;
+        height: 100%;
     }
 
     .input-form {
