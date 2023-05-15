@@ -47,7 +47,8 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
 
     const filteredUsers = users
         .filter((u) => u.uid !== user?.uid)
-        .filter((u) => u.displayName.toLowerCase().includes(search.toLowerCase()));
+        .filter((u) => u.displayName && u.displayName.toLowerCase().includes(search.toLowerCase()));
+
 
     const handleUserClick = (userId) => {
         setSelectedUser(userId);
@@ -86,7 +87,7 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
                             <Badge dot={usersWithNotifications.includes(user.uid)}>
                                 <Tooltip title={user.displayName}>
                                     <Avatar
-                                        src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
+                                        src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}` || ''}
                                         icon={<UserOutlined />}
                                     />
                                 </Tooltip>

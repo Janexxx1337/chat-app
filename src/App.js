@@ -3,7 +3,7 @@ import "./App.css";
 import {Button, Switch} from "antd";
 import {auth, database} from "./Components/FirebaseConfig";
 import {onAuthStateChanged, signOut} from "firebase/auth";
-import {ref, onValue, push, remove, child, update} from "firebase/database";
+import {ref, onValue, push, remove, child } from "firebase/database";
 import {BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PrivateChat from "./Components/PrivateChat";
 import Register from "./Components/Register";
