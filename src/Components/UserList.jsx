@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { List, Badge } from 'antd';
-import { ManOutlined, NotificationOutlined, SmileOutlined, UserOutlined, WomanOutlined } from '@ant-design/icons';
+import { List, Badge, Avatar, Tooltip } from 'antd';
+import { UserOutlined, NotificationOutlined } from '@ant-design/icons';
 import { ref, onValue } from 'firebase/database';
 import { database } from './FirebaseConfig';
 import { useNavigate } from "react-router-dom";
-
 
 const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser }) => {
     const [users, setUsers] = useState([]);
     const [usersWithNotifications, setUsersWithNotifications] = useState([]);
 
     const navigate = useNavigate();
-
-    const icons = [<UserOutlined />, <WomanOutlined />, <ManOutlined />, <SmileOutlined />];
 
     useEffect(() => {
         const messagesRef = ref(database, 'messages');
@@ -43,19 +40,13 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser 
 
     const filteredUsers = users.filter((u) => u.uid !== user?.uid);
 
-    const getRandomRGBColor = () => {
-        const r = Math.floor(Math.random() * 256);
-        const g = Math.floor(Math.random() * 256);
-        const b = Math.floor(Math.random() * 256);
-        return `rgb(${r}, ${g}, ${b})`;
-    };
-
     const handleUserClick = (userId) => {
         setSelectedUser(userId);
         setPrivateChatUser(userId);
         setIsPrivateChat(true);
         navigate('/private');
     };
+
     return (
         <div className={'user-list'}>
             <h3>Список пользователей:</h3>
@@ -68,7 +59,12 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser 
                         style={{ cursor: 'pointer' }}
                     >
                         <Badge dot={usersWithNotifications.includes(user.uid)}>
-                            {React.cloneElement(icons[index % icons.length], { style: { color: getRandomRGBColor() } })}
+                            <Tooltip title={user.displayName}>
+                                <Avatar
+                                    src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
+                                    icon={<UserOutlined />}
+                                />
+                            </Tooltip>
                             {user.displayName}
                             {usersWithNotifications.includes(user.uid) && (
                                 <NotificationOutlined style={{ marginLeft: 8 }} />
