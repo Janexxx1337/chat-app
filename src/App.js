@@ -16,25 +16,25 @@ import AuthButtons from "./Components/AuthButtons";
 import MessageForm from "./Components/MessageForm";
 import PublicChat from "./Components/PublicChat";
 import {AliwangwangOutlined, UserOutlined} from "@ant-design/icons";
+import {useMessages} from "./Components/useMessages";
 
 function App() {
+
     const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState([]);
+
 
     const [user, setUser] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
 
     const [isPrivateChat, setIsPrivateChat] = useState(false);
     const [privateChatUser, setPrivateChatUser] = useState(null);
+    const { messages, notifications } = useMessages(user, isPrivateChat, {database});
 
 
     const [isUserListVisible, setIsUserListVisible] = useState(false);
 
     const [usersData, setUsersData] = useState({});
     const [selectedMessageId, setSelectedMessageId] = useState(null);
-
-    const [lastNotificationMessageRef, setLastNotificationMessageRef] = useState(null);
-    const [notifications, setNotifications] = useState({});
 
     const [isDarkTheme, setIsDarkTheme] = useState(false);
 
@@ -68,30 +68,7 @@ function App() {
         }
     }, [isDarkTheme]);
 
-    useEffect(() => {
-        const messagesRef = ref(database, "messages");
-        onValue(messagesRef, (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                setMessages(Object.entries(data).map(([id, value]) => ({...value, id})));
 
-                if (user && isPrivateChat) {
-                    const newNotifications = {};
-
-                    Object.entries(data).forEach(([messageId, message]) => {
-                        if (message.receiver === user.uid && !message.isRead) {
-                            newNotifications[messageId] = message;
-
-                            const messageRef = child(messagesRef, messageId);
-                            update(messageRef, {isRead: true});
-                        }
-                    });
-
-                    setNotifications(newNotifications);
-                }
-            }
-        });
-    }, [user, isPrivateChat]);
 
     const onEmojiClick = (emojiKey) => {
         setMessage((prevMessage) => prevMessage + emojiKey);
@@ -106,25 +83,6 @@ function App() {
         }
     };
 
-    const enterPrivateChat = () => {
-        if (lastNotificationMessageRef === selectedUser) return;
-
-        setIsPrivateChat(true);
-        const messagesRef = ref(database, "messages");
-        const messageData = {
-            sender: user.uid,
-            senderName: user.displayName,
-            text: `пользователь ${user.displayName} вошел в личный диалог с вами.`,
-            receiver: selectedUser,
-        };
-        const newMessageRef = push(messagesRef, messageData);
-        setLastNotificationMessageRef(selectedUser);
-
-        setTimeout(() => {
-            remove(newMessageRef);
-            setLastNotificationMessageRef(null);
-        }, 2000);
-    };
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -140,38 +98,10 @@ function App() {
             };
             push(messagesRef, messageData);
 
-            if (isPrivateChat) {
-                const notificationsRef = ref(database, "notifications");
-                const notificationData = {
-                    sender: user.uid,
-                    senderName: user.displayName,
-                    receiver: selectedUser,
-                    text: message,
-                    isRead: false,
-                };
-                push(notificationsRef, notificationData);
-            }
-
             setMessage("");
         }
     };
 
-    useEffect(() => {
-        if (user) {
-            const notificationsRef = ref(database, "notifications");
-            onValue(notificationsRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    // Отфильтровываем уведомления, которые предназначены для текущего пользователя
-                    const userNotifications = Object.entries(data).filter(
-                        ([id, notification]) => notification.receiver === user.uid
-                    ).map(([id, notification]) => ({ ...notification, id }));
-
-                    setNotifications(userNotifications);
-                }
-            });
-        }
-    }, [user]);
     return (
         <AuthProvider>
             <Router>
@@ -266,7 +196,6 @@ function App() {
                     {user && (
                         <UserList
                             setSelectedUser={setSelectedUser}
-                            enterPrivateChat={enterPrivateChat}
                             user={user}
                             setPrivateChatUser={setPrivateChatUser}
                             setIsPrivateChat={setIsPrivateChat}

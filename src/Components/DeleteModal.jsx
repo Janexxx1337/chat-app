@@ -9,11 +9,6 @@ const DeleteModal = ({ message, onCancel, onConfirm }) => {
         setVisible(false);
     };
 
-    const handleConfirm = () => {
-        onConfirm(message.id);
-        setVisible(false);
-    };
-
     return (
         message && (
             <Modal

@@ -208,6 +208,7 @@ span svg {
 .ant-list .ant-list-item {
     padding: 20px;
     min-width: 250px;
+    margin-bottom: 10px;
 }
 
 div > li {

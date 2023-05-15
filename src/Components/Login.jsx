@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import githubLogo from "../images/github-logo.svg";
 import { GoogleAuthProvider } from "firebase/auth";
 import googleLogo from '../images/google.svg'
+import { ref, set, child, get, database } from "firebase/database";
 
 const Login = () => {
     const navigate = useNavigate();
