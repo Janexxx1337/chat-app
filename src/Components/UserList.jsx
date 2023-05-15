@@ -52,7 +52,7 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
 
     return (
         isUserListVisible && (
-            <div className={`user-list ${isUserListOpen ? 'user-list-open' : ''}`}>
+            <div className={'user-list'}>
                 <h3>Список пользователей:</h3>
                 <List
                     dataSource={filteredUsers}

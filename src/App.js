@@ -28,7 +28,7 @@ function App() {
     const [privateChatUser, setPrivateChatUser] = useState(null);
 
 
-    const [isUserListVisible, setIsUserListVisible] = useState(true);
+    const [isUserListVisible, setIsUserListVisible] = useState(false);
 
     const [usersData, setUsersData] = useState({});
     const [selectedMessageId, setSelectedMessageId] = useState(null);
@@ -41,8 +41,15 @@ function App() {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
     useEffect(() => {
-        const handleResize = () => setWindowWidth(window.innerWidth);
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+            if (window.innerWidth <= 1024) {
+                setIsUserListVisible(false);
+            }
+        };
+
         window.addEventListener('resize', handleResize);
+
         return () => {
             window.removeEventListener('resize', handleResize);
         };
@@ -261,7 +268,7 @@ function App() {
                             </>
                         )}
                     </div>
-                    {windowWidth <= 1024 && user && (
+                    {windowWidth && user && (
                         <Button
                             type="primary"
                             icon={<UserOutlined />}
@@ -269,6 +276,7 @@ function App() {
                             onClick={() => setIsUserListVisible(prev => !prev)}
                             style={{ position: 'fixed', right: '2px', top: '5px' }}
                         />
+
                     )}
                     {user && (
                         <UserList
