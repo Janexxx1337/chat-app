@@ -14,7 +14,6 @@ import DeleteModal from "./Components/DeleteModal";
 import MessageContainer from "./Components/MessageContainer";
 import AuthButtons from "./Components/AuthButtons";
 import MessageForm from "./Components/MessageForm";
-import PublicChat from "./Components/PublicChat";
 import {AliwangwangOutlined, UserOutlined} from "@ant-design/icons";
 import {useMessages} from "./Components/useMessages";
 
@@ -105,8 +104,9 @@ function App() {
     return (
         <AuthProvider>
             <Router>
-                <PublicChat
-                    handleSignOut={handleSignOut}/>
+                <Button type="link" onClick={handleSignOut}>
+                    Выйти
+                </Button>
                 <Switch
                     checked={isDarkTheme}
                     onChange={() => setIsDarkTheme(prev => !prev)}
@@ -122,7 +122,6 @@ function App() {
                         </div>
                         {user ? (
                             <>
-
                                 <Routes>
                                     <Route
                                         path="/"
@@ -145,7 +144,6 @@ function App() {
                                                     messages={messages}
                                                     user={user}
                                                     selectedUser={selectedUser}
-                                                    notifications={notifications}
                                                 />
                                             </div>
                                         }
@@ -189,7 +187,7 @@ function App() {
                              onClick={() => setIsUserListVisible(prev => !prev)}
                              style={{ position: 'fixed', right: '2px', top: '5px' }}
                          >
-                             Пользователи
+                             Контакты
                          </Button>
                      </div>
                     )}
