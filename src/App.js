@@ -27,7 +27,7 @@ function App() {
 
     const [isPrivateChat, setIsPrivateChat] = useState(false);
     const [privateChatUser, setPrivateChatUser] = useState(null);
-    const { messages, notifications } = useMessages(user, isPrivateChat, {database});
+    const { messages } = useMessages(user, isPrivateChat, {database});
 
 
     const [isUserListVisible, setIsUserListVisible] = useState(false);
@@ -123,19 +123,6 @@ function App() {
                         {user ? (
                             <>
                                 <Routes>
-                                    <Route
-                                        path="/"
-                                        element={
-                                            <div className="message-container">
-                                                <MessageContainer
-                                                    user={user}
-                                                    setSelectedMessageId={setSelectedMessageId}
-                                                    messages={messages}
-                                                    usersData={usersData}
-                                                />
-                                            </div>
-                                        }
-                                    />
                                     <Route
                                         path="/private"
                                         element={
