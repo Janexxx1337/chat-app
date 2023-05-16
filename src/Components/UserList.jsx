@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { List, Badge, Avatar, Tooltip, Input } from 'antd';
 import { UserOutlined, NotificationOutlined, SearchOutlined } from '@ant-design/icons';
-import { ref, onValue } from 'firebase/database';
+import { ref,onValue, child, update } from "firebase/database";
 import { database } from './FirebaseConfig';
 import { useNavigate } from "react-router-dom";
 
@@ -47,7 +47,8 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
 
     const filteredUsers = users
         .filter((u) => u.uid !== user?.uid)
-        .filter((u) => u.displayName.toLowerCase().includes(search.toLowerCase()));
+        .filter((u) => u.displayName && u.displayName.toLowerCase().includes(search.toLowerCase()));
+
 
     const handleUserClick = (userId) => {
         setSelectedUser(userId);
@@ -67,8 +68,7 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
 
     return (
         isUserListVisible && (
-            <div className={'user-list'} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <h3>Список пользователей:</h3>
+            <div className={'user-list'}>
                 <Input
                     placeholder="Поиск по контактам..."
                     prefix={<SearchOutlined />}
@@ -87,7 +87,7 @@ const UserList = ({ setSelectedUser, setIsPrivateChat, user, setPrivateChatUser,
                             <Badge dot={usersWithNotifications.includes(user.uid)}>
                                 <Tooltip title={user.displayName}>
                                     <Avatar
-                                        src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}`}
+                                        src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${index}` || ''}
                                         icon={<UserOutlined />}
                                     />
                                 </Tooltip>
