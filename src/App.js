@@ -267,7 +267,7 @@ function App() {
                             </>
                         )}
                     </div>
-                    {windowWidth && user && (
+                    {user && (
                      <div className={'button-fixed'}>
                          <Button
                              type="primary"
@@ -276,7 +276,7 @@ function App() {
                              onClick={() => setIsUserListVisible(prev => !prev)}
                              style={{ position: 'fixed', right: '2px', top: '5px' }}
                          >
-                             Пользователи
+                             Контакты
                          </Button>
                      </div>
                     )}

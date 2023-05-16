@@ -1,16 +1,8 @@
 import { List } from "antd";
 
-const PrivateChat = ({ messages, user, selectedUser, notifications }) => {
+const PrivateChat = ({ messages, user, selectedUser,  }) => {
     return (
         <>
-            <div className="notifications">
-                {Object.values(notifications).filter(notification => !notification.isRead).map((notification, index) => (
-                    <div key={index}>
-                        {notification.senderName}: {notification.text}
-                    </div>
-                ))}
-            </div>
-
             <div className="messages-container">
                 {user && selectedUser && (
                     <List

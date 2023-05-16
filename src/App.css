@@ -37,8 +37,7 @@ body {
 .container {
     display: flex;
     justify-content: space-around;
-    align-items: center;
-    height: 100vh;
+    align-items: flex-start;
 }
 
 .user-list {
@@ -61,9 +60,7 @@ body {
 
 .chat {
     width: 40%;
-    height: 70%;
     margin-bottom: 10%;
-    margin-top: 5%;
     border: 2px solid #ccc;
     border-radius: 8px;
     padding: 15px;
@@ -211,6 +208,7 @@ span svg {
 .ant-list .ant-list-item {
     padding: 20px;
     min-width: 250px;
+    margin-bottom: 10px;
 }
 
 div > li {
@@ -263,14 +261,34 @@ aside > div.Flex.epr-preview.FlexRow {
     background-color: #fff;
 }
 
+.fade-enter {
+    opacity: 0;
+}
+
+.fade-enter-active {
+    opacity: 1;
+    transition: opacity 300ms;
+}
+
+.fade-exit {
+    opacity: 1;
+}
+
+.fade-exit-active {
+    opacity: 0;
+    transition: opacity 300ms;
+}
+
+
 @media (max-width: 1024px) {
     .container {
         padding: 10px;
+        align-items: center;
     }
 
     .chat {
-        width: 100%;
         padding: inherit;
+        width: 100%;
     }
 
     .user-list {
@@ -279,6 +297,10 @@ aside > div.Flex.epr-preview.FlexRow {
 
     .current-user {
         display: none;
+    }
+
+    .button-fixed button.ant-btn  {
+        width: 50%;
     }
 }
 
